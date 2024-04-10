@@ -1,0 +1,42 @@
+package plazoleta.domain.api.useCase;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import plazoleta.domain.model.Restaurant;
+import plazoleta.domain.model.User;
+import plazoleta.domain.spi.IRestaurantPersistencePort;
+
+import java.time.LocalDate;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
+class RestaurantCaseTest {
+
+    @Mock
+    IRestaurantPersistencePort restaurantPersistencePort;
+    @InjectMocks
+    RestaurantCase restaurantCase;
+    @BeforeEach
+    void setUp() {
+    }
+
+    @Test
+    void createRestaurant() {
+
+        Restaurant restaurant = new Restaurant(1,"rest", "any",
+                new User(), "+573104922805", "logo", "ni"
+        );
+        when(restaurantPersistencePort.save(restaurant)).thenReturn(restaurant);
+
+        final Restaurant result = restaurantCase.createRestaurant(restaurant);
+        Assertions.assertEquals(result, restaurant);
+
+    }
+}

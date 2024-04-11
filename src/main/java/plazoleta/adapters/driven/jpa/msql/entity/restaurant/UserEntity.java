@@ -2,12 +2,10 @@ package plazoleta.adapters.driven.jpa.msql.entity.restaurant;
 
 import jakarta.persistence.*;
 import lombok.*;
-import plazoleta.adapters.driven.jpa.msql.entity.restaurant.RolEntity;
-
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "persona")
+@Table(name = "usuario")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -15,11 +13,11 @@ import java.time.LocalDate;
 public class UserEntity {
 
     @Id
-    @Column(name="id_persona")
+    @Column(name="id_usuario")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idUser;
     private String name;
-    @Column(name="last_name")
+    @Column(name="lastname")
     private String lastName;
     @Column(name="identification_document")
     private String identificationDocument;

@@ -15,7 +15,7 @@ public class RestaurantEntity {
     @Column(name="direccion")
     private String address;
     @ManyToOne
-    @JoinColumn(name = "id_persona")
+    @JoinColumn(name = "id_usuario")
     private UserEntity ownerId;
     @Column(name="telefono")
     private String phone;

@@ -16,4 +16,9 @@ public class PlateCaseUse implements IPlateServicePort {
     public Plate create(Plate plate) {
         return platePersistencePort.save(plate);
     }
+
+    @Override
+    public Plate update(Plate plate, int id) {
+        return platePersistencePort.update(plate, id);
+    }
 }

@@ -1,2 +1,7 @@
-package plazoleta.domain.api;public interface IPlateServicePort {
+package plazoleta.domain.api;
+
+import plazoleta.domain.model.plate.Plate;
+
+public interface IPlateServicePort {
+    Plate create (Plate plate);
 }

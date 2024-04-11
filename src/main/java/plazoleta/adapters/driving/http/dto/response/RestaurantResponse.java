@@ -1,8 +1,8 @@
-package plazoleta.adapters.driving.http.dto;
+package plazoleta.adapters.driving.http.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import plazoleta.domain.model.User;
+import plazoleta.domain.model.restaurant.User;
 
 @Getter
 @AllArgsConstructor

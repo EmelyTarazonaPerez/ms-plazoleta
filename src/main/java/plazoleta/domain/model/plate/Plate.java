@@ -1,31 +1,30 @@
-package plazoleta.domain.model;
+package plazoleta.domain.model.plate;
+
+import plazoleta.domain.model.restaurant.Restaurant;
 
 public class Plate {
-        private int id;
-        private String name;
-        private int categoryId;
-        private String description;
-        private int price;
-        private int restaurantId;
-        private String imageUrl;
-        private boolean active;
+    private int id;
+    private String name;
+    private Category categoryId;
+    private String description;
+    private int price;
+    private Restaurant restaurantId;
+    private String imageUrl;
+    private boolean active = true;
 
-        // Constructor
-        public Plate(int id, String name, int categoryId, String description, int price, int restaurantId, String imageUrl, boolean active) {
-            this.id = id;
-            this.name = name;
-            this.categoryId = categoryId;
-            this.description = description;
-            this.price = price;
-            this.restaurantId = restaurantId;
-            this.imageUrl = imageUrl;
-            this.active = active;
-        }
+    public Plate(int id, String name, Category categoryId, String description, int price, Restaurant restaurantId, String imageUrl) {
+        this.id = id;
+        this.name = name;
+        this.categoryId = categoryId;
+        this.description = description;
+        this.price = price;
+        this.restaurantId = restaurantId;
+        this.imageUrl = imageUrl;
+    }
 
     public int getId() {
         return id;
     }
-
     public void setId(int id) {
         this.id = id;
     }
@@ -38,11 +37,11 @@ public class Plate {
         this.name = name;
     }
 
-    public int getCategoryId() {
+    public Category getCategoryId() {
         return categoryId;
     }
 
-    public void setCategoryId(int categoryId) {
+    public void setCategoryId(Category categoryId) {
         this.categoryId = categoryId;
     }
 
@@ -62,11 +61,11 @@ public class Plate {
         this.price = price;
     }
 
-    public int getRestaurantId() {
+    public Restaurant getRestaurantId() {
         return restaurantId;
     }
 
-    public void setRestaurantId(int restaurantId) {
+    public void setRestaurantId(Restaurant restaurantId) {
         this.restaurantId = restaurantId;
     }
 

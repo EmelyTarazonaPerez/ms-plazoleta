@@ -1,4 +1,15 @@
 package plazoleta.adapters.driven.jpa.msql.entity.plate;
 
-public class CategoriaEntity {
+import jakarta.persistence.*;
+import lombok.Data;
+
+@Entity
+@Data
+@Table(name = "category")
+public class CategoryEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    private String name;
+    private String description;
 }

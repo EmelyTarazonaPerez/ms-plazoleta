@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import plazoleta.adapters.driven.jpa.msql.mapper.IRestaurantEntityMapper;
 import plazoleta.adapters.driven.jpa.msql.repository.IRestaurantRepositoryJPA;
-import plazoleta.domain.model.Restaurant;
+import plazoleta.domain.model.restaurant.Restaurant;
 import plazoleta.domain.spi.IRestaurantPersistencePort;
 
 @Service
@@ -19,7 +19,5 @@ public class RestaurantAdapter implements IRestaurantPersistencePort {
         return restaurantEntityMapper.toRestaurant(restaurantRepositoryJPA
                 .save(restaurantEntityMapper.toRestaurantEntity(restaurant)));
     }
-
-
 
 }

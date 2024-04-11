@@ -7,13 +7,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import plazoleta.domain.model.Restaurant;
-import plazoleta.domain.model.User;
+import plazoleta.domain.model.restaurant.Restaurant;
+import plazoleta.domain.model.restaurant.User;
 import plazoleta.domain.spi.IRestaurantPersistencePort;
 
-import java.time.LocalDate;
-
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)

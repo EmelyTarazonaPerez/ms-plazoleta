@@ -7,17 +7,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import plazoleta.adapters.driven.jpa.msql.entity.RestaurantEntity;
-import plazoleta.adapters.driven.jpa.msql.entity.RolEntity;
-import plazoleta.adapters.driven.jpa.msql.entity.UserEntity;
+import plazoleta.adapters.driven.jpa.msql.entity.restaurant.RestaurantEntity;
 import plazoleta.adapters.driven.jpa.msql.mapper.IRestaurantEntityMapper;
 import plazoleta.adapters.driven.jpa.msql.repository.IRestaurantRepositoryJPA;
-import plazoleta.domain.model.Restaurant;
-import plazoleta.domain.model.User;
+import plazoleta.domain.model.restaurant.Restaurant;
+import plazoleta.domain.model.restaurant.User;
 
-import java.time.LocalDate;
-
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)

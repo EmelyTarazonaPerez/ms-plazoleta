@@ -8,11 +8,11 @@ public class Plate {
     private Category categoryId;
     private String description;
     private int price;
-    private Restaurant restaurantId;
+    private int restaurantId;
     private String imageUrl;
     private boolean active = true;
 
-    public Plate(int id, String name, Category categoryId, String description, int price, Restaurant restaurantId, String imageUrl) {
+    public Plate(int id, String name, Category categoryId, String description, int price, int restaurantId, String imageUrl) {
         this.id = id;
         this.name = name;
         this.categoryId = categoryId;
@@ -61,11 +61,11 @@ public class Plate {
         this.price = price;
     }
 
-    public Restaurant getRestaurantId() {
+    public int getRestaurantId() {
         return restaurantId;
     }
 
-    public void setRestaurantId(Restaurant restaurantId) {
+    public void setRestaurantId(int restaurantId) {
         this.restaurantId = restaurantId;
     }
 

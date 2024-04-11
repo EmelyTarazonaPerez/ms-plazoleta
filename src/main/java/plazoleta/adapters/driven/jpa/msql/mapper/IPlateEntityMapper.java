@@ -22,5 +22,5 @@ public interface IPlateEntityMapper {
     PlateEntity toPlateEntity(Plate plate);
 
     @InheritInverseConfiguration
-    Plate toPlate (PlateEntity plateEntity);
+    Plate toPlate(PlateEntity plateEntity);
 }

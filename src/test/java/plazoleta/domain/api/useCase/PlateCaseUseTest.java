@@ -1,5 +1,6 @@
 package plazoleta.domain.api.useCase;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,20 +24,29 @@ class PlateCaseUseTest {
     @InjectMocks
     PlateCaseUse plateCaseUse;
 
+    private Plate plate;
+
+    @BeforeEach
+    void setUp() {
+        plate = new Plate(1, "Hamburguesa",
+                new Category(), "Deliciosa hamburguesa",
+                1500, 1, "https://ejemplo.com/hamburguesa.jpg");
+    }
+
     @Test
     void create() {
-        Restaurant restaurant = new Restaurant(1, "rest", "any",
-                new User(), "+573104922805", "logo", "ni"
-        );
-        Plate plate = new Plate(1, "Hamburguesa",
-                new Category(), "Deliciosa hamburguesa",
-                1500, restaurant, "https://ejemplo.com/hamburguesa.jpg");
-
         when(platePersistencePort.save(plate)).thenReturn(plate);
 
         Plate createdPlate = plateCaseUse.create(plate);
 
         verify(platePersistencePort).save(plate);
         assertEquals(plate, createdPlate);
+    }
+
+    @Test
+    void update() {
+        when(platePersistencePort.update(plate, 15)).thenReturn(plate);
+        Plate updatePlate = plateCaseUse.update(plate,15);
+        assertEquals(plate, updatePlate);
     }
 }

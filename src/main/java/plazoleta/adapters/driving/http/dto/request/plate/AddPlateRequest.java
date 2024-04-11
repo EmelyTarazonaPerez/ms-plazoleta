@@ -23,7 +23,7 @@ public class AddPlateRequest {
     @Min(value = 2, message="El precio no puede ser negativo ni cero")
     private int price;
     @NotNull
-    private Restaurant restaurantId;
+    private int restaurantId;
     @NotNull
     private String imageUrl;
     private boolean active;

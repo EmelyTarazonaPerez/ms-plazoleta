@@ -1,2 +1,5 @@
-package plazoleta.adapters.driving.http.dto.request.plate;public class AssociatedElement {
+package plazoleta.adapters.driving.http.dto.request.plate;
+
+public class AssociatedElement {
+    private int id;
 }

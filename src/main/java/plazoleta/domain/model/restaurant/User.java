@@ -1,4 +1,4 @@
-package plazoleta.domain.model;
+package plazoleta.domain.model.restaurant;
 
 public class User {
     private int idUser;

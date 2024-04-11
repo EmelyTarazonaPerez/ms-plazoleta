@@ -2,10 +2,8 @@ package plazoleta.domain.api.useCase;
 
 
 import plazoleta.domain.api.IRestaurantServicePort;
-import plazoleta.domain.model.Restaurant;
+import plazoleta.domain.model.restaurant.Restaurant;
 import plazoleta.domain.spi.IRestaurantPersistencePort;
-
-import java.time.LocalDate;
 
 public class RestaurantCase implements IRestaurantServicePort {
     private final IRestaurantPersistencePort restaurantPersistencePort;

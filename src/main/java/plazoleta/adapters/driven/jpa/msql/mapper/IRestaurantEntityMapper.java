@@ -5,8 +5,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mappings;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
-import plazoleta.adapters.driven.jpa.msql.entity.RestaurantEntity;
-import plazoleta.domain.model.Restaurant;
+import plazoleta.adapters.driven.jpa.msql.entity.restaurant.RestaurantEntity;
+import plazoleta.domain.model.restaurant.Restaurant;
 
 @Mapper(componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.IGNORE,

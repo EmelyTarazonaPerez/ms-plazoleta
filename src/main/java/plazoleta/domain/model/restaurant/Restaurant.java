@@ -1,4 +1,4 @@
-package plazoleta.domain.model;
+package plazoleta.domain.model.restaurant;
 
 public class Restaurant {
     private int id;
@@ -8,6 +8,7 @@ public class Restaurant {
     private String phone;
     private String urlLogo;
     private String nit;
+
 
     public Restaurant(int id, String name, String address, User ownerId, String phone, String urlLogo, String nit) {
         this.id = id;

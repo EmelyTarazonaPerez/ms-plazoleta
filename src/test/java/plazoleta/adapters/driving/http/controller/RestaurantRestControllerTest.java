@@ -11,15 +11,14 @@ import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import plazoleta.adapters.driven.jpa.msql.entity.UserEntity;
+import plazoleta.adapters.driven.jpa.msql.entity.restaurant.UserEntity;
 import plazoleta.adapters.driving.http.ConsumerUser;
-import plazoleta.adapters.driving.http.dto.AddRestaurantRequest;
+import plazoleta.adapters.driving.http.dto.request.AddRestaurantRequest;
 import plazoleta.adapters.driving.http.mapper.IRestaurantRequestMapper;
 import plazoleta.domain.api.IRestaurantServicePort;
-import plazoleta.domain.model.Restaurant;
-import plazoleta.domain.model.User;
+import plazoleta.domain.model.restaurant.Restaurant;
+import plazoleta.domain.model.restaurant.User;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -82,6 +81,26 @@ class RestaurantRestControllerTest {
         String restaurantJSON = "{\n" +
                 "    \"name\": \"restaurant\",\n" +
                 "    \"address\": \"calle 7 #17\",\n" +
+                "    \"ownerId\": {\n" +
+                "        \"idUser\": 2\n" +
+                "    },\n" +
+                "    \"phone\": \"p571z09056853\",\n" +
+                "    \"urlLogo\": \"djasdnjasdhasd\"\n" +
+                "}\n";
+
+
+        mockMcv.perform(post("/restaurant/create")
+                        .contentType(MediaType.valueOf("application/json"))
+                        .content(restaurantJSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("retornar status 400 al recibir valores nulos")
+    void saveError() throws Exception {
+        String restaurantJSON = "{\n" +
+                "    \"name\": null,\n" +
+                "    \"address\": null,\n" +
                 "    \"ownerId\": {\n" +
                 "        \"idUser\": 2\n" +
                 "    },\n" +

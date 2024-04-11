@@ -1,7 +1,8 @@
-package plazoleta.adapters.driven.jpa.msql.entity;
+package plazoleta.adapters.driven.jpa.msql.entity.restaurant;
 
 import jakarta.persistence.*;
 import lombok.*;
+import plazoleta.adapters.driven.jpa.msql.entity.restaurant.RolEntity;
 
 import java.time.LocalDate;
 

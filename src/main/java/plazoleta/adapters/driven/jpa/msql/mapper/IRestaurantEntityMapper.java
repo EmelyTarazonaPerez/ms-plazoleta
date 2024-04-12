@@ -5,8 +5,11 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mappings;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
+import org.springframework.data.domain.Page;
 import plazoleta.adapters.driven.jpa.msql.entity.restaurant.RestaurantEntity;
 import plazoleta.domain.model.restaurant.Restaurant;
+
+import java.util.List;
 
 @Mapper(componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
@@ -26,6 +29,5 @@ public interface IRestaurantEntityMapper {
 
     @InheritInverseConfiguration
     RestaurantEntity toRestaurantEntity(Restaurant user);
-
-
+    List<Restaurant> toRestaurantList(Page<RestaurantEntity> all);
 }

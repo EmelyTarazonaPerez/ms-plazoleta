@@ -10,21 +10,29 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import plazoleta.adapters.driven.jpa.msql.entity.restaurant.RestaurantEntity;
 import plazoleta.adapters.driven.jpa.msql.entity.restaurant.RolEntity;
 import plazoleta.adapters.driven.jpa.msql.entity.restaurant.UserEntity;
 import plazoleta.adapters.driving.http.ConsumerUser;
 import plazoleta.adapters.driving.http.dto.request.AddRestaurantRequest;
+import plazoleta.adapters.driving.http.dto.response.RestaurantResponse;
 import plazoleta.adapters.driving.http.mapper.IRestaurantRequestMapper;
+import plazoleta.adapters.driving.http.mapper.IRestaurantResponseMapper;
 import plazoleta.domain.api.IRestaurantServicePort;
 import plazoleta.domain.model.restaurant.Restaurant;
 import plazoleta.domain.model.restaurant.User;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
@@ -34,6 +42,8 @@ class RestaurantRestControllerTest {
     private IRestaurantServicePort restaurantServicePort;
     @Mock
     private IRestaurantRequestMapper restaurantRequestMapper;
+    @Mock
+    private IRestaurantResponseMapper restaurantResponseMapper;
     @Mock
     private ConsumerUser consumerUser;
 
@@ -114,5 +124,20 @@ class RestaurantRestControllerTest {
                         .contentType(MediaType.valueOf("application/json"))
                         .content(restaurantJSON))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void getAll() throws Exception {
+        List<RestaurantResponse> restaurantResponses = new ArrayList<>();
+        List<Restaurant> restaurants = new ArrayList<>();
+
+        when(restaurantServicePort.getAll(0,5,true)).thenReturn(restaurants);
+        when(restaurantResponseMapper.toResponseList(restaurants)).thenReturn(restaurantResponses);
+
+        mockMcv.perform(MockMvcRequestBuilders.get("/restaurant/getAll")
+                        .param("sort", "true")
+                        .param("size", "5")
+                        .param("page", "0"))
+                .andExpect(status().isOk());
     }
 }

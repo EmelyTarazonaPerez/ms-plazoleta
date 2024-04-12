@@ -4,17 +4,18 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import plazoleta.adapters.driven.jpa.msql.entity.restaurant.UserEntity;
 import plazoleta.adapters.driving.http.ConsumerUser;
 import plazoleta.adapters.driving.http.dto.request.AddRestaurantRequest;
+import plazoleta.adapters.driving.http.dto.response.RestaurantResponse;
 import plazoleta.adapters.driving.http.exception.ErrorAccess;
 import plazoleta.adapters.driving.http.mapper.IRestaurantRequestMapper;
+import plazoleta.adapters.driving.http.mapper.IRestaurantResponseMapper;
 import plazoleta.domain.api.IRestaurantServicePort;
 import plazoleta.domain.model.restaurant.Restaurant;
+
+import java.util.List;
 
 
 @RestController
@@ -23,6 +24,8 @@ import plazoleta.domain.model.restaurant.Restaurant;
 public class RestaurantRestController {
     private final IRestaurantServicePort restaurantServicePort;
     private final IRestaurantRequestMapper restaurantRequestMapper;
+    private final IRestaurantResponseMapper restaurantResponseMapper;
+
     private final ConsumerUser consumerUser;
     @PostMapping("/create")
     public ResponseEntity<Restaurant> save(@Valid @RequestBody AddRestaurantRequest request) {
@@ -32,6 +35,14 @@ public class RestaurantRestController {
         }
         Restaurant restaurant = restaurantRequestMapper.toRestaurant(request);
         return new ResponseEntity<>(restaurantServicePort.createRestaurant(restaurant), HttpStatus.OK);
+    }
+
+    @GetMapping("/getAll")
+    public ResponseEntity<List<RestaurantResponse>> getAll (
+            @RequestParam (defaultValue = "0") int page,
+            @RequestParam (defaultValue = "10") int size,
+            @RequestParam (defaultValue = "false") boolean sort){
+        return new ResponseEntity<>( restaurantResponseMapper.toResponseList(restaurantServicePort.getAll(page, size, sort)), HttpStatus.OK);
     }
 
 }

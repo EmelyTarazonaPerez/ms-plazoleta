@@ -25,7 +25,8 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authRequest -> authRequest
                         .requestMatchers(HttpMethod.POST, "/plate/**").hasAuthority("propietario")
-                        .requestMatchers(HttpMethod.POST, "/restaurant/**").hasAuthority("admin")
+                        .requestMatchers(HttpMethod.POST, "/restaurant/create").hasAuthority("admin")
+                        .requestMatchers(HttpMethod.GET,"/restaurant/getAll").hasAuthority("cliente")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtTokenValidationFilter(tokenValidator), UsernamePasswordAuthenticationFilter.class)

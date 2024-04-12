@@ -36,7 +36,7 @@ public class BeanConfiguration {
 
     @Bean
     public IPlatePersistencePort platePersistencePort(){
-        return new PlateAdapter(plateEntityMapper,plateRepositoryJPA );
+        return new PlateAdapter(plateEntityMapper, plateRepositoryJPA, restaurantRepositoryJPA );
     }
     @Bean
     public IPlateServicePort plateServicePort(){ return new PlateCaseUse(platePersistencePort());

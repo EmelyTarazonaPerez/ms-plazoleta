@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import plazoleta.adapters.driven.jpa.msql.exception.ErrorAccessModifi;
 import plazoleta.adapters.driven.jpa.msql.exception.ErrorBaseDatos;
 import plazoleta.adapters.driven.jpa.msql.exception.ProductNotFount;
 import plazoleta.adapters.driving.http.exception.ErrorAccess;
@@ -22,6 +23,14 @@ import java.util.Map;
 @ControllerAdvice
 @RequiredArgsConstructor
 public class ControllerAdvisor extends ResponseEntityExceptionHandler {
+
+    @ExceptionHandler(ErrorAccessModifi.class)
+    public ResponseEntity<ExceptionResponse> handleErrorListTechnologies(ErrorAccessModifi exception) {
+        return ResponseEntity.badRequest().body(new ExceptionResponse
+                (String.format(exception.getMessage()),
+                        HttpStatus.BAD_REQUEST.toString(), LocalDateTime.now()
+                ));
+    }
 
     @ExceptionHandler(ErrorAccess.class)
     public ResponseEntity<ExceptionResponse> handleErrorListTechnologies(ErrorAccess exception) {

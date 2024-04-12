@@ -18,7 +18,7 @@ public class PlateCaseUse implements IPlateServicePort {
     }
 
     @Override
-    public Plate update(Plate plate, int id) {
-        return platePersistencePort.update(plate, id);
+    public Plate update(Plate plate, int id, int idAutenticado) {
+        return platePersistencePort.update(plate, id, idAutenticado);
     }
 }

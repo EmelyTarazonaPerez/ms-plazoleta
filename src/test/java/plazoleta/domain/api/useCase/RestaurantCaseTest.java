@@ -28,7 +28,7 @@ class RestaurantCaseTest {
     void createRestaurant() {
 
         Restaurant restaurant = new Restaurant(1,"rest", "any",
-                new User(), "+573104922805", "logo", "ni"
+                1, "+573104922805", "logo", "ni"
         );
         when(restaurantPersistencePort.save(restaurant)).thenReturn(restaurant);
 

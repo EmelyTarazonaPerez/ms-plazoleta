@@ -32,7 +32,7 @@ class RestaurantAdapterTest {
     @Test
     void save() {
         Restaurant restaurant = new Restaurant(1,"rest", "any",
-                new User(), "+573104922805", "logo", "ni"
+               1, "+573104922805", "logo", "ni"
         );
         RestaurantEntity restaurantEntity = new RestaurantEntity();
 

@@ -11,6 +11,7 @@ import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import plazoleta.adapters.driven.jpa.msql.entity.restaurant.RolEntity;
 import plazoleta.adapters.driven.jpa.msql.entity.restaurant.UserEntity;
 import plazoleta.adapters.driving.http.ConsumerUser;
 import plazoleta.adapters.driving.http.dto.request.AddRestaurantRequest;
@@ -18,6 +19,8 @@ import plazoleta.adapters.driving.http.mapper.IRestaurantRequestMapper;
 import plazoleta.domain.api.IRestaurantServicePort;
 import plazoleta.domain.model.restaurant.Restaurant;
 import plazoleta.domain.model.restaurant.User;
+
+import java.time.LocalDate;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -50,24 +53,22 @@ class RestaurantRestControllerTest {
         String restaurantJSON = "{\n" +
                 "    \"name\": \"restaurant\",\n" +
                 "    \"address\": \"calle 7 #17\",\n" +
-                "    \"ownerId\": {\n" +
-                "        \"idUser\": 1\n" +
-                "    },\n" +
-                "    \"phone\": \"+57109056853\",\n" +
+                "    \"ownerId\": 1,\n" +
+                "    \"phone\": \"57109056853\",\n" +
                 "    \"urlLogo\": \"djasdnjasdhasd\",\n" +
-                "    \"nit\": \"nit\"\n" +
+                "    \"nit\": \"25468\"\n" +
                 "}\n";
 
         Restaurant restaurant = new Restaurant(1,"rest", "any",
-                new User(), "+573104922805", "logo", "nit"
-        );
-        UserEntity userEntity = new UserEntity();
-        userEntity.setIdUser(1);
-        userEntity.getIdRol().setIdRol(2);
+                1, "573104922805", "logo", "nit");
+
+        UserEntity userEntity = new UserEntity(1, "name", "any", "1056",
+                "+57893156", LocalDate.now(), "gmail", "s",new RolEntity(2,"propietario", "x"));
+
 
         when(consumerUser.getRolByIdUser(userEntity.getIdUser())).thenReturn(userEntity);
-        when(restaurantServicePort.createRestaurant(restaurantRequestMapper.toRestaurant(any(AddRestaurantRequest.class))))
-                .thenReturn(restaurant);
+        when(restaurantRequestMapper.toRestaurant(any(AddRestaurantRequest.class))).thenReturn(restaurant);
+        when(restaurantServicePort.createRestaurant(restaurant)).thenReturn(restaurant);
 
         mockMcv.perform(post("/restaurant/create")
                         .contentType(MediaType.valueOf("application/json"))

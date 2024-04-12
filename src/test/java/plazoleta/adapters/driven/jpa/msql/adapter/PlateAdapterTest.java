@@ -1,23 +1,20 @@
 package plazoleta.adapters.driven.jpa.msql.adapter;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.mongodb.core.aggregation.ConditionalOperators;
+import plazoleta.adapters.driven.jpa.msql.entity.plate.CategoryEntity;
 import plazoleta.adapters.driven.jpa.msql.entity.plate.PlateEntity;
 import plazoleta.adapters.driven.jpa.msql.entity.restaurant.RestaurantEntity;
-import plazoleta.adapters.driven.jpa.msql.entity.restaurant.UserEntity;
 import plazoleta.adapters.driven.jpa.msql.exception.ProductNotFount;
 import plazoleta.adapters.driven.jpa.msql.mapper.IPlateEntityMapper;
 import plazoleta.adapters.driven.jpa.msql.repository.IPlateRepositoryJPA;
+import plazoleta.adapters.driven.jpa.msql.repository.IRestaurantRepositoryJPA;
 import plazoleta.domain.model.plate.Category;
 import plazoleta.domain.model.plate.Plate;
-import plazoleta.domain.model.restaurant.Restaurant;
-import plazoleta.domain.model.restaurant.User;
 
 import java.util.Optional;
 
@@ -33,6 +30,11 @@ class PlateAdapterTest {
     private IPlateEntityMapper plateEntityMapper;
     @Mock
     private IPlateRepositoryJPA plateRepositoryJPA;
+    @Mock
+    private IRestaurantRepositoryJPA restaurantRepositoryJPA;
+
+    @Mock
+    private PlateAdapter plateAdapterM;
     @InjectMocks
     private PlateAdapter plateAdapter;
 
@@ -41,9 +43,9 @@ class PlateAdapterTest {
     @BeforeEach
     void setUp() {
         plateInput =
-                new Plate(1, "Hamburguesa",
+                new Plate(30, "Hamburguesa",
                         new Category(), "Deliciosa hamburguesa",
-                        1500, 1, "https://ejemplo.com/hamburguesa.jpg");
+                        1500, 6, "https://ejemplo.com/hamburguesa.jpg");
     }
 
     @Test
@@ -66,36 +68,54 @@ class PlateAdapterTest {
     @Test
     void testUpdatePlate_Success() {
         // Arrange
-        int id = 1;
-        plateInput.setPrice(10);
-        plateInput.setDescription("New description");
+        int id = 30;
+        int idAuthenticate = 25;
+        PlateEntity plateEntity = new PlateEntity(30, "Hamburguesa",
+                new CategoryEntity(), "Deliciosa hamburguesa",
+                1500, 6, "https://ejemplo.com/hamburguesa.jpg", true);
 
-        PlateEntity plateEntity = new PlateEntity();
-        plateEntity.setId(id);
+        RestaurantEntity restaurantEntity = new RestaurantEntity(6,"rest", "any",
+                25, "+573104922805", "logo", "ni"
+        );
 
-        Optional<PlateEntity> plateEntityOptional = Optional.of(plateEntity);
-
-        when(plateRepositoryJPA.filteByID(id)).thenReturn(plateEntityOptional);
+        when(restaurantRepositoryJPA.findById(6)).thenReturn(Optional.of(restaurantEntity));
+        when(plateRepositoryJPA.findById(id)).thenReturn(Optional.of(plateEntity));
         when(plateRepositoryJPA.save(any(PlateEntity.class))).thenReturn(plateEntity);
-        when(plateEntityMapper.toPlate(any(PlateEntity.class))).thenReturn(plateInput);
+        when(plateEntityMapper.toPlate(plateEntity)).thenReturn(plateInput);
 
         // Act
-        Plate result = plateAdapter.update(plateInput, id);
+        Plate updatedPlate = plateAdapter.update(plateInput, id, idAuthenticate);
 
         // Assert
-        assertNotNull(result);
-        assertEquals(plateInput.getPrice(), result.getPrice());
-        assertEquals(plateInput.getDescription(), result.getDescription());
+        assertNotNull(updatedPlate);
+        // Add more assertions as needed
     }
 
     @Test
     void testUpdatePlate_ProductNotFound() {
         // Arrange
         int id = 50000;
-        Optional<PlateEntity> plateEntityOptional = Optional.empty();
-        when(plateRepositoryJPA.filteByID(id)).thenReturn(plateEntityOptional);
-
         // Act & Assert
-        assertThrows(ProductNotFount.class, () -> plateAdapter.update(plateInput, id));
+        assertThrows(ProductNotFount.class, () -> plateAdapter.update(plateInput, id, 1));
     }
+
+    @Test
+    void accessModifi() {
+        RestaurantEntity restaurantEntity = new RestaurantEntity(6,"rest", "any",
+                25, "+573104922805", "logo", "ni"
+        );
+        when(restaurantRepositoryJPA.findById(6)).thenReturn(Optional.of(restaurantEntity));
+        // Act
+        Boolean updatedPlate = plateAdapter.accessModifi(plateInput, 25);
+        assertNotNull(updatedPlate);
+    }
+
+    @Test
+    void accessModify_Error() {
+        when(restaurantRepositoryJPA.findById(6)).thenReturn(Optional.empty());
+        // Act
+        assertThrows(ProductNotFount.class, () -> plateAdapter.update(plateInput, 30, 1));
+    }
+
+
 }

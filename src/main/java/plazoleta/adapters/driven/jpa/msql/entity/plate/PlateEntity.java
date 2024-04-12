@@ -8,7 +8,7 @@ import plazoleta.adapters.driven.jpa.msql.entity.restaurant.RestaurantEntity;
 @Getter
 @Setter
 @AllArgsConstructor
-@RequiredArgsConstructor
+@NoArgsConstructor
 @Table(name = "plate")
 public class PlateEntity {
     @Id

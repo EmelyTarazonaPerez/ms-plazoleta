@@ -4,13 +4,13 @@ public class Restaurant {
     private int id;
     private String name;
     private String address;
-    private User ownerId;
+    private int ownerId;
     private String phone;
     private String urlLogo;
     private String nit;
 
 
-    public Restaurant(int id, String name, String address, User ownerId, String phone, String urlLogo, String nit) {
+    public Restaurant(int id, String name, String address, int ownerId, String phone, String urlLogo, String nit) {
         this.id = id;
         this.name = name;
         this.address = address;
@@ -44,11 +44,11 @@ public class Restaurant {
         this.address = address;
     }
 
-    public User getOwnerId() {
+    public int getOwnerId() {
         return ownerId;
     }
 
-    public void setOwnerId(User ownerId) {
+    public void setOwnerId(int ownerId) {
         this.ownerId = ownerId;
     }
 

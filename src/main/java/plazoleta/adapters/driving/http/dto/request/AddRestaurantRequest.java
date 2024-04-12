@@ -14,7 +14,7 @@ public class AddRestaurantRequest {
     @NotNull
     private String address;
     @NotNull
-    private User ownerId;
+    private int ownerId;
     @Pattern(regexp = "^[0-9]+$", message = "Solo se permiten números")
     @Size(max=13, message="telefono debe tener maximo 13 caracteres")
     private String phone;

@@ -45,8 +45,9 @@ class PlateCaseUseTest {
 
     @Test
     void update() {
-        when(platePersistencePort.update(plate, 15)).thenReturn(plate);
-        Plate updatePlate = plateCaseUse.update(plate,15);
+        when(platePersistencePort.update(plate, 15,1)).thenReturn(plate);
+        Plate updatePlate = plateCaseUse.update(plate,15, 1);
         assertEquals(plate, updatePlate);
     }
+
 }

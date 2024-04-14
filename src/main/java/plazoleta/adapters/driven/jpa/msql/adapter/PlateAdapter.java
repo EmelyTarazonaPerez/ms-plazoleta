@@ -1,6 +1,7 @@
 package plazoleta.adapters.driven.jpa.msql.adapter;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import plazoleta.adapters.driven.jpa.msql.entity.plate.PlateEntity;
 import plazoleta.adapters.driven.jpa.msql.entity.restaurant.RestaurantEntity;
@@ -13,9 +14,11 @@ import plazoleta.adapters.driven.jpa.msql.repository.IRestaurantRepositoryJPA;
 import plazoleta.domain.model.plate.Plate;
 import plazoleta.domain.spi.IPlatePersistencePort;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static plazoleta.adapters.driven.jpa.msql.utils.DataOrdering.getOrdering;
 
 @Service
 @AllArgsConstructor
@@ -40,11 +43,10 @@ public class PlateAdapter implements IPlatePersistencePort {
 
     @Override
     public Plate update(Plate plate, int id, int idAutenticado) {
+        if (accessModified(plate, idAutenticado)) {
+            throw new ErrorAccessModifi("Solo el propietario del restaurante puede modificar");
+        }
         try {
-            if (accessModifi(plate, idAutenticado)) {
-                throw new ErrorAccessModifi("Solo el propietario del restaurante puede modificar");
-            }
-
             PlateEntity plateEntity = plateRepositoryJPA.findById(id).get();
 
             plateEntity.setPrice(plate.getPrice());
@@ -57,11 +59,22 @@ public class PlateAdapter implements IPlatePersistencePort {
         }
     }
 
-    public boolean accessModifi(Plate plate, int idAutenticado) {
+    @Override
+    public List<Plate> get(int page, int size, int category, int restaurant) {
+       if (category == 0) { Pageable pageable = getOrdering(page, size,false, "name");
+          return plateEntityMapper.toPlateList(plateRepositoryJPA.findByRestaurantId(restaurant, pageable));
+       }
+       return plateEntityMapper.toPlateList(plateRepositoryJPA
+                       .findByRestaurantId(restaurant)
+                       .stream().filter(plate -> plate.getCategoryId() == category)
+                       .collect(Collectors.toList()));
+    }
+
+    public boolean accessModified(Plate plate, int idAuthenticated) {
         Optional<RestaurantEntity> restaurantOptional = restaurantRepositoryJPA.findById(plate.getRestaurantId());
         if (restaurantOptional.isPresent()) {
             RestaurantEntity restaurant = restaurantOptional.get();
-            return restaurant.getOwnerId() != idAutenticado;
+            return restaurant.getOwnerId() != idAuthenticated;
         } else {
             throw new ErrorBaseDatos("El restaurante " + plate.getRestaurantId() + " no está registrado en la base de datos");
         }

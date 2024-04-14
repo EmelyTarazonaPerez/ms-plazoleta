@@ -16,7 +16,7 @@ public class AddPlateRequest {
     @NotNull
     private String name;
     @NotNull
-    private Category categoryId;
+    private int categoryId;
     @NotNull
     private String description;
     @NotNull

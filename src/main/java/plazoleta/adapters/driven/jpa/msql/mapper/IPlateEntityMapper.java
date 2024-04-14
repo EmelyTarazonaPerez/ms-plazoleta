@@ -4,6 +4,8 @@ import org.mapstruct.*;
 import plazoleta.adapters.driven.jpa.msql.entity.plate.PlateEntity;
 import plazoleta.domain.model.plate.Plate;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
         unmappedSourcePolicy = ReportingPolicy.IGNORE
@@ -23,4 +25,6 @@ public interface IPlateEntityMapper {
 
     @InheritInverseConfiguration
     Plate toPlate(PlateEntity plateEntity);
+
+    List<Plate> toPlateList(List<PlateEntity> byRestaurantId);
 }

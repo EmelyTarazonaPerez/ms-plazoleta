@@ -3,6 +3,8 @@ package plazoleta.adapters.driven.jpa.msql.entity.plate;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter

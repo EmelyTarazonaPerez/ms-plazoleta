@@ -5,14 +5,14 @@ import plazoleta.domain.model.restaurant.Restaurant;
 public class Plate {
     private int id;
     private String name;
-    private Category categoryId;
+    private int categoryId;
     private String description;
     private int price;
     private int restaurantId;
     private String imageUrl;
     private boolean active = true;
 
-    public Plate(int id, String name, Category categoryId, String description, int price, int restaurantId, String imageUrl) {
+    public Plate(int id, String name, int categoryId, String description, int price, int restaurantId, String imageUrl) {
         this.id = id;
         this.name = name;
         this.categoryId = categoryId;
@@ -37,11 +37,11 @@ public class Plate {
         this.name = name;
     }
 
-    public Category getCategoryId() {
+    public int getCategoryId() {
         return categoryId;
     }
 
-    public void setCategoryId(Category categoryId) {
+    public void setCategoryId(int categoryId) {
         this.categoryId = categoryId;
     }
 

@@ -37,4 +37,5 @@ public class RestaurantAdapter implements IRestaurantPersistencePort {
         return restaurantEntityMapper.toRestaurantList(restaurantRepositoryJPA.findAll(pageable));
     }
 
+
 }

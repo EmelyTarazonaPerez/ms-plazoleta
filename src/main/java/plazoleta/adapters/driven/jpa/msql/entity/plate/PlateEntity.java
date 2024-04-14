@@ -2,14 +2,13 @@ package plazoleta.adapters.driven.jpa.msql.entity.plate;
 
 import jakarta.persistence.*;
 import lombok.*;
-import plazoleta.adapters.driven.jpa.msql.entity.restaurant.RestaurantEntity;
 
 @Entity
+@Table(name = "plate")
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
-@Table(name = "plate")
+@RequiredArgsConstructor
 public class PlateEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,9 +16,8 @@ public class PlateEntity {
     private int id;
     @Column(name = "name")
     private String name;
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private CategoryEntity categoryId;
+    @Column(name = "id_category")
+    private int categoryId;
     @Column(name = "description")
     private String description;
     @Column(name = "price")

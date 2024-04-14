@@ -2,7 +2,10 @@ package plazoleta.domain.spi;
 
 import plazoleta.domain.model.plate.Plate;
 
+import java.util.List;
+
 public interface IPlatePersistencePort {
     Plate save (Plate plate);
-    Plate update (Plate plate, int id, int idAutenticado);
+    Plate update (Plate plate, int id, int authenticatedId);
+    List<Plate> get(int page, int size, int category, int restaurant);
 }

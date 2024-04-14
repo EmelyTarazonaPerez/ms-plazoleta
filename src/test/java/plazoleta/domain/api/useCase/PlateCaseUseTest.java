@@ -1,5 +1,6 @@
 package plazoleta.domain.api.useCase;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,6 +12,9 @@ import plazoleta.domain.model.plate.Plate;
 import plazoleta.domain.model.restaurant.Restaurant;
 import plazoleta.domain.model.restaurant.User;
 import plazoleta.domain.spi.IPlatePersistencePort;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
@@ -29,7 +33,7 @@ class PlateCaseUseTest {
     @BeforeEach
     void setUp() {
         plate = new Plate(1, "Hamburguesa",
-                new Category(), "Deliciosa hamburguesa",
+               1, "Deliciosa hamburguesa",
                 1500, 1, "https://ejemplo.com/hamburguesa.jpg");
     }
 
@@ -50,4 +54,12 @@ class PlateCaseUseTest {
         assertEquals(plate, updatePlate);
     }
 
+    @Test
+    void get() {
+        List<Plate> plateList = new ArrayList<>();
+
+        when(platePersistencePort.get(0, 5,0, 6)).thenReturn(plateList);
+        List<Plate> getPlates = plateCaseUse.get(0, 5,0, 6);
+        Assertions.assertNotNull(getPlates);
+    }
 }

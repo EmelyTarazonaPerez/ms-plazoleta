@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import plazoleta.adapters.driven.jpa.msql.entity.plate.PlateEntity;
+
+import java.util.List;
 
 @Data
 @Entity
@@ -26,4 +29,6 @@ public class RestaurantEntity {
     @Column(name="url_logo")
     private String urlLogo;
     private String nit;
+    @OneToMany(mappedBy = "restaurantId")
+    private List<PlateEntity> plateEntities;
 }

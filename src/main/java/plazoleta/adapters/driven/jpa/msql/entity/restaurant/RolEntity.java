@@ -3,6 +3,7 @@ package plazoleta.adapters.driven.jpa.msql.entity.restaurant;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Entity
@@ -10,6 +11,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @Table(name = "rol")
+@RequiredArgsConstructor
 public class RolEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -28,8 +28,9 @@ public class RestaurantRestController {
 
     private final ConsumerUser consumerUser;
     @PostMapping("/create")
-    public ResponseEntity<Restaurant> save(@Valid @RequestBody AddRestaurantRequest request) {
-        UserEntity entity = consumerUser.getRolByIdUser(request.getOwnerId());
+    public ResponseEntity<Restaurant> save(@Valid @RequestBody AddRestaurantRequest request,@RequestHeader("Authorization") String token) {
+        String auth = token.substring(7);
+        UserEntity entity = consumerUser.getRolByIdUser(request.getOwnerId(), auth);
         if (entity.getIdRol().getIdRol() != 2){
             throw new ErrorAccess("El usuario no es propietario");
         }

@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -76,13 +77,14 @@ class RestaurantRestControllerTest {
                 "+57893156", LocalDate.now(), "gmail", "s",new RolEntity(2,"propietario", "x"));
 
 
-        when(consumerUser.getRolByIdUser(userEntity.getIdUser())).thenReturn(userEntity);
+        when(consumerUser.getRolByIdUser(userEntity.getIdUser(), "TOKEN_DE_PRUEBA")).thenReturn(userEntity);
         when(restaurantRequestMapper.toRestaurant(any(AddRestaurantRequest.class))).thenReturn(restaurant);
         when(restaurantServicePort.createRestaurant(restaurant)).thenReturn(restaurant);
 
         mockMcv.perform(post("/restaurant/create")
                         .contentType(MediaType.valueOf("application/json"))
-                        .content(restaurantJSON))
+                        .content(restaurantJSON)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer TOKEN_DE_PRUEBA"))
                 .andExpect(status().isOk());
     }
 

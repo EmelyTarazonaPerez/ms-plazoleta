@@ -14,7 +14,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import plazoleta.adapters.driven.jpa.msql.exception.ErrorAccessModifi;
 import plazoleta.adapters.driven.jpa.msql.exception.ErrorBaseDatos;
 import plazoleta.adapters.driven.jpa.msql.exception.ProductNotFount;
+import plazoleta.adapters.driving.http.controller.OrderRestController;
 import plazoleta.adapters.driving.http.exception.ErrorAccess;
+import plazoleta.domain.exception.ExceptionValid;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -24,8 +26,16 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
+    @ExceptionHandler(ExceptionValid.class)
+    public ResponseEntity<ExceptionResponse> handleErrorExceptionValid(ExceptionValid exception) {
+        return ResponseEntity.badRequest().body(new ExceptionResponse
+                (String.format(exception.getMessage()),
+                        HttpStatus.BAD_REQUEST.toString(), LocalDateTime.now()
+                ));
+    }
+
     @ExceptionHandler(ErrorAccessModifi.class)
-    public ResponseEntity<ExceptionResponse> handleErrorListTechnologies(ErrorAccessModifi exception) {
+    public ResponseEntity<ExceptionResponse> handleErrorAccessModify(ErrorAccessModifi exception) {
         return ResponseEntity.badRequest().body(new ExceptionResponse
                 (String.format(exception.getMessage()),
                         HttpStatus.BAD_REQUEST.toString(), LocalDateTime.now()
@@ -33,7 +43,7 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(ErrorAccess.class)
-    public ResponseEntity<ExceptionResponse> handleErrorListTechnologies(ErrorAccess exception) {
+    public ResponseEntity<ExceptionResponse> handleErrorAccess(ErrorAccess exception) {
         return ResponseEntity.badRequest().body(new ExceptionResponse
                 (String.format(exception.getMessage()),
                         HttpStatus.BAD_REQUEST.toString(), LocalDateTime.now()

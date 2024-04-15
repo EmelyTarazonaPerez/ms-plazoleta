@@ -2,7 +2,6 @@ package plazoleta.domain.model.restaurant;
 
 public class User {
     private int idUser;
-
     public int getIdUser() {
         return idUser;
     }

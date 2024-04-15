@@ -2,6 +2,10 @@ package plazoleta.adapters.driven.jpa.msql.entity.plate;
 
 import jakarta.persistence.*;
 import lombok.*;
+import plazoleta.adapters.driven.jpa.msql.entity.order.OrderEntity;
+import plazoleta.adapters.driven.jpa.msql.entity.order.OrderPlateEntity;
+
+import java.util.List;
 
 @Entity
 @Table(name = "plate")

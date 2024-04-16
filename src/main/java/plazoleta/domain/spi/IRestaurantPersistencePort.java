@@ -11,4 +11,5 @@ public interface IRestaurantPersistencePort {
     Restaurant save(Restaurant user);
     Optional<RestaurantEntity> getRestaurant(int id);
     List<Restaurant> getAll(int page, int size, boolean sort);
+    Optional<RestaurantEntity> getRestaurantByEmployee (int id);
 }

@@ -9,4 +9,7 @@ import java.util.Optional;
 @Repository
 public interface IRestaurantRepositoryJPA extends JpaRepository<RestaurantEntity, Integer> {
 Optional<RestaurantEntity> findById(int id);
+
+Optional<RestaurantEntity> findByOwnerId(int id);
+
 }

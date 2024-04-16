@@ -13,6 +13,7 @@ import plazoleta.adapters.driving.http.mapper.IOrderRequestMapper;
 import plazoleta.domain.api.IOrderServicePort;
 import plazoleta.domain.model.pedido.Order;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -26,7 +27,8 @@ public class OrderRestController {
     private final ConsumerUser consumerUser;
 
     @PostMapping("/create")
-    public ResponseEntity<Order> save(@RequestBody AddOrderRequest orderRequest, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<Order> save(@RequestBody AddOrderRequest orderRequest,
+                                      @RequestHeader("Authorization") String token) {
         String auth = token.substring(7);
         try {
             int idAuthenticated = jwtTokenValidator.getUserIdFromToken(auth);
@@ -41,5 +43,14 @@ public class OrderRestController {
         } catch (Exception e) {
             throw new ErrorAccess("Error al crear orden" + e);
         }
+    }
+    @GetMapping("/get-all")
+    public ResponseEntity<List<Order>> get(@RequestParam(defaultValue = "pendiente") String state,
+                                            @RequestParam(defaultValue = "0") int page,
+                                            @RequestParam(defaultValue = "2") int size,
+                                            @RequestHeader("Authorization") String token) {
+        String auth = token.substring(7);
+        int idAuthenticated = jwtTokenValidator.getUserIdFromToken(auth);
+        return new ResponseEntity<>(orderServicePort.getOrderByState(state, page, size, idAuthenticated), HttpStatus.OK);
     }
 }

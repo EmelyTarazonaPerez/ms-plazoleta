@@ -52,7 +52,7 @@ public class BeanConfiguration {
     }
     @Bean
     public IOrderPersistencePort persistencePort () {
-        return new OrderAdapter(orderRepositoryJPA, orderEntityMapper);
+        return new OrderAdapter(orderRepositoryJPA, orderEntityMapper, restaurantRepositoryJPA);
     }
     @Bean
     public IOrderServicePort orderServicePort () {

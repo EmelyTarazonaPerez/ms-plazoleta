@@ -36,6 +36,9 @@ public class RestaurantAdapter implements IRestaurantPersistencePort {
         Pageable pageable = getOrdering(page, size, sort, "name");
         return restaurantEntityMapper.toRestaurantList(restaurantRepositoryJPA.findAll(pageable));
     }
-
+    @Override
+    public Optional<RestaurantEntity> getRestaurantByEmployee (int id) {
+        return restaurantRepositoryJPA.findByOwnerId(id);
+    }
 
 }

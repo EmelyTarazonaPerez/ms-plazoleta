@@ -4,6 +4,8 @@ import org.mapstruct.*;
 import plazoleta.adapters.driven.jpa.msql.entity.order.OrderEntity;
 import plazoleta.domain.model.pedido.Order;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
         unmappedSourcePolicy = ReportingPolicy.IGNORE)
@@ -19,7 +21,9 @@ public interface IOrderEntityMapper {
             @Mapping(source = "plateEntityList", target = "plates")
     })
     Order toOrder (OrderEntity order);
-
+    List<Order> toOrderList(List<OrderEntity> byState);
     @InheritInverseConfiguration
     OrderEntity toOrderEntity(Order order);
+
+
 }

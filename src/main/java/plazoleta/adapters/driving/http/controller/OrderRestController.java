@@ -44,13 +44,23 @@ public class OrderRestController {
             throw new ErrorAccess("Error al crear orden" + e);
         }
     }
+
     @GetMapping("/get-all")
     public ResponseEntity<List<Order>> get(@RequestParam(defaultValue = "pendiente") String state,
-                                            @RequestParam(defaultValue = "0") int page,
-                                            @RequestParam(defaultValue = "2") int size,
-                                            @RequestHeader("Authorization") String token) {
+                                           @RequestParam(defaultValue = "0") int page,
+                                           @RequestParam(defaultValue = "2") int size,
+                                           @RequestHeader("Authorization") String token) {
         String auth = token.substring(7);
         int idAuthenticated = jwtTokenValidator.getUserIdFromToken(auth);
         return new ResponseEntity<>(orderServicePort.getOrderByState(state, page, size, idAuthenticated), HttpStatus.OK);
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Order> takeOrder(@PathVariable int id,
+                                           @RequestBody AddOrderRequest orderRequest,
+                                           @RequestHeader("Authorization") String token) {
+        String auth = token.substring(7);
+        int idAuthenticated = jwtTokenValidator.getUserIdFromToken(auth);
+        return new ResponseEntity<>(orderServicePort.takeOrder(idAuthenticated, id, orderRequest), HttpStatus.OK);
     }
 }

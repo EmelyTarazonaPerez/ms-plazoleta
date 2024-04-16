@@ -37,7 +37,7 @@ public class PlateRestController {
         return new ResponseEntity<>(plateServicePort.create(plate), HttpStatus.OK);
     }
 
-    @PutMapping("auth/{id}")
+    @PutMapping("/auth/{id}")
     public ResponseEntity<Plate> update (@Valid @RequestBody AddPlateRequest plateRequest,
                                          @PathVariable int id,
                                          @RequestHeader("Authorization") String token) {

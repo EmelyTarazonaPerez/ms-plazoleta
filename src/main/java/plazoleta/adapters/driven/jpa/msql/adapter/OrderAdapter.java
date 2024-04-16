@@ -10,6 +10,7 @@ import plazoleta.adapters.driven.jpa.msql.exception.ProductNotFount;
 import plazoleta.adapters.driven.jpa.msql.mapper.IOrderEntityMapper;
 import plazoleta.adapters.driven.jpa.msql.repository.IOrderRepositoryJPA;
 import plazoleta.adapters.driven.jpa.msql.repository.IRestaurantRepositoryJPA;
+import plazoleta.adapters.driving.http.dto.request.order.AddOrderRequest;
 import plazoleta.domain.model.pedido.Order;
 import plazoleta.domain.spi.IOrderPersistencePort;
 import plazoleta.domain.spi.IRestaurantPersistencePort;
@@ -51,5 +52,18 @@ public class OrderAdapter implements IOrderPersistencePort {
         List<Order> getAllOrder = orderEntityMapper.toOrderList(orderRepositoryJPA.findByState(state, pageable));
         return getAllOrder.stream().filter(order -> order.getRestaurantId() == restaurant.get().getId()).collect(Collectors.toList());
     }
+
+    @Override
+    public Order takeOrder(int idAuthenticated, int idOrder, AddOrderRequest orderRequest) {
+        Optional<OrderEntity> orderEntity = orderRepositoryJPA.findById(idOrder);
+        if (orderEntity.isEmpty()) {
+            throw new ProductNotFount("No se encontró ningún restaurante para el usuario autenticado.");
+        }
+        orderEntity.get().setChefId(idAuthenticated);
+        orderEntity.get().setState(orderRequest.getState());
+
+        return orderEntityMapper.toOrder(orderRepositoryJPA.save(orderEntity.get()));
+    }
+
 
 }

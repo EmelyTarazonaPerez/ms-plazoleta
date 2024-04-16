@@ -14,6 +14,7 @@ import plazoleta.adapters.driven.jpa.msql.exception.ErrorBaseDatos;
 import plazoleta.adapters.driven.jpa.msql.mapper.IOrderEntityMapper;
 import plazoleta.adapters.driven.jpa.msql.repository.IOrderRepositoryJPA;
 import plazoleta.adapters.driven.jpa.msql.repository.IRestaurantRepositoryJPA;
+import plazoleta.adapters.driving.http.dto.request.order.AddOrderRequest;
 import plazoleta.domain.model.pedido.Order;
 
 import java.time.LocalDate;
@@ -115,5 +116,22 @@ class OrderAdapterTest {
         for (Order order : resultOrders) {
             assertEquals(idAuthenticated, order.getChefId());
         }
+    }
+
+    @Test
+    void takeOrder() {
+        int idAuthenticated = 26;
+        int idOrder = 26;
+        AddOrderRequest addOrderRequest = new AddOrderRequest(1,LocalDate.now(), "preparado", 26, 6, null);
+        OrderEntity orderEntity = new OrderEntity();
+
+        when(orderRepositoryJPA.findById(idOrder)).thenReturn(Optional.of(orderEntity));
+        when(orderRepositoryJPA.save(orderEntity)).thenReturn(orderEntity);
+        when(orderEntityMapper.toOrder(orderEntity)).thenReturn(order);
+
+        final Order result = orderAdapter.takeOrder(idAuthenticated, idOrder, addOrderRequest);
+
+        Assertions.assertNotNull(result);
+
     }
 }

@@ -40,4 +40,9 @@ public class OrderCaseUse implements IOrderServicePort {
         return orderPersistencePort.save(order);
     }
 
+    @Override
+    public List<Order> getOrderByState(String state, int page, int size, int idAuthenticated) {
+        return orderPersistencePort.getOrderByState(state, page, size, idAuthenticated);
+    }
+
 }

@@ -28,9 +28,18 @@ public class OrderEntity {
     @Column(name = "estado")
     private String state;
     @Column(name = "id_chef")
-    private int chefId;
+    private Integer chefId;
     @Column(name = "id_restaurant")
     private int restaurantId;
     @OneToMany(mappedBy = "order")
-    private List<OrderPlateEntity>  plateEntityList;
+    private List<OrderPlateEntity> plateEntityList;
+
+    public void setChefId(Integer chefId) {
+        if (chefId == null) {
+            this.chefId = 0;
+        } else {
+            this.chefId = chefId;
+
+        }
+    }
 }

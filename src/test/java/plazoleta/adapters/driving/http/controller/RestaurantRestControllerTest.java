@@ -13,17 +13,15 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import plazoleta.adapters.driven.jpa.msql.entity.restaurant.RestaurantEntity;
 import plazoleta.adapters.driven.jpa.msql.entity.restaurant.RolEntity;
 import plazoleta.adapters.driven.jpa.msql.entity.restaurant.UserEntity;
-import plazoleta.adapters.driving.http.ConsumerUser;
+import plazoleta.adapters.driven.jpa.msql.utils.consumer.ExternalApiConsumption;
 import plazoleta.adapters.driving.http.dto.request.AddRestaurantRequest;
 import plazoleta.adapters.driving.http.dto.response.RestaurantResponse;
 import plazoleta.adapters.driving.http.mapper.IRestaurantRequestMapper;
 import plazoleta.adapters.driving.http.mapper.IRestaurantResponseMapper;
 import plazoleta.domain.api.IRestaurantServicePort;
 import plazoleta.domain.model.restaurant.Restaurant;
-import plazoleta.domain.model.restaurant.User;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -46,7 +44,7 @@ class RestaurantRestControllerTest {
     @Mock
     private IRestaurantResponseMapper restaurantResponseMapper;
     @Mock
-    private ConsumerUser consumerUser;
+    private ExternalApiConsumption consumerUser;
 
     @InjectMocks
     RestaurantRestController restaurantRestController;

@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import plazoleta.adapters.driven.jpa.msql.entity.restaurant.UserEntity;
-import plazoleta.adapters.driving.http.ConsumerUser;
+import plazoleta.adapters.driven.jpa.msql.utils.consumer.ExternalApiConsumption;
 import plazoleta.adapters.driving.http.dto.request.AddRestaurantRequest;
 import plazoleta.adapters.driving.http.dto.response.RestaurantResponse;
 import plazoleta.adapters.driving.http.exception.ErrorAccess;
@@ -25,8 +25,7 @@ public class RestaurantRestController {
     private final IRestaurantServicePort restaurantServicePort;
     private final IRestaurantRequestMapper restaurantRequestMapper;
     private final IRestaurantResponseMapper restaurantResponseMapper;
-
-    private final ConsumerUser consumerUser;
+    private final ExternalApiConsumption consumerUser;
     @PostMapping("/create")
     public ResponseEntity<Restaurant> save(@Valid @RequestBody AddRestaurantRequest request,@RequestHeader("Authorization") String token) {
         String auth = token.substring(7);

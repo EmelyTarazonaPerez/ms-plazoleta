@@ -18,7 +18,7 @@ public interface IOrderEntityMapper {
             @Mapping(source = "state", target = "state"),
             @Mapping(source = "chefId", target = "chefId"),
             @Mapping(source = "restaurantId", target = "restaurantId"),
-            @Mapping(source = "plateEntityList", target = "plates")
+            @Mapping(source = "plateEntityList", target = "plates"),
     })
     Order toOrder (OrderEntity order);
     List<Order> toOrderList(List<OrderEntity> byState);

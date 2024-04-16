@@ -14,14 +14,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import plazoleta.adapters.driving.http.JwtService.JwtTokenValidator;
+import plazoleta.adapters.driving.http.utils.JwtService.JwtTokenValidator;
 import plazoleta.adapters.driving.http.dto.request.plate.AddPlateRequest;
 import plazoleta.adapters.driving.http.mapper.IPlateResquestMapper;
 import plazoleta.domain.api.IPlateServicePort;
-import plazoleta.domain.model.plate.Category;
 import plazoleta.domain.model.plate.Plate;
-import plazoleta.domain.model.restaurant.Restaurant;
-import plazoleta.domain.model.restaurant.User;
 
 import java.util.ArrayList;
 import java.util.List;

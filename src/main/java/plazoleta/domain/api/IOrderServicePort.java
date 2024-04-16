@@ -11,4 +11,5 @@ public interface IOrderServicePort {
     List<Order> getOrderByState(String state, int page, int size, int idAuthenticated);
 
     Order takeOrder(int idAuthenticated, int idOrder, AddOrderRequest orderRequest);
+    String readyToDelivery(int idAuthenticated, int id, AddOrderRequest orderRequest, String auth);
 }

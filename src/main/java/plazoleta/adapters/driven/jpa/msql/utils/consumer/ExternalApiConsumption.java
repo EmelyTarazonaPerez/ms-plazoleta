@@ -1,4 +1,4 @@
-package plazoleta.adapters.driving.http;
+package plazoleta.adapters.driven.jpa.msql.utils.consumer;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
@@ -10,7 +10,7 @@ import plazoleta.adapters.driven.jpa.msql.entity.restaurant.UserEntity;
 
 @Service
 @RequiredArgsConstructor
-public class ConsumerUser {
+public class ExternalApiConsumption  {
     private final RestTemplate restTemplate;
 
     public UserEntity getRolByIdUser (int id, String token) {

@@ -9,11 +9,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import plazoleta.adapters.driven.jpa.msql.entity.order.OrderEntity;
 import plazoleta.adapters.driven.jpa.msql.entity.restaurant.RestaurantEntity;
+import plazoleta.adapters.driven.jpa.msql.entity.restaurant.UserEntity;
 import plazoleta.adapters.driven.jpa.msql.exception.ErrorAccessModifi;
 import plazoleta.adapters.driven.jpa.msql.exception.ErrorBaseDatos;
 import plazoleta.adapters.driven.jpa.msql.mapper.IOrderEntityMapper;
 import plazoleta.adapters.driven.jpa.msql.repository.IOrderRepositoryJPA;
 import plazoleta.adapters.driven.jpa.msql.repository.IRestaurantRepositoryJPA;
+import plazoleta.adapters.driven.jpa.msql.utils.consumer.ExternalApiConsumption;
 import plazoleta.adapters.driving.http.dto.request.order.AddOrderRequest;
 import plazoleta.domain.model.pedido.Order;
 
@@ -34,9 +36,12 @@ class OrderAdapterTest {
     private IOrderRepositoryJPA orderRepositoryJPA;
     @Mock
     private IOrderEntityMapper orderEntityMapper;
-
+    @Mock
+    private ExternalApiConsumption externalApiConsumption;
     @Mock
     private IRestaurantRepositoryJPA restaurantRepositoryJPA;
+    @Mock
+    private OrderAdapter orderAdapterMock;
     @InjectMocks
     private OrderAdapter orderAdapter;
 
@@ -133,5 +138,68 @@ class OrderAdapterTest {
 
         Assertions.assertNotNull(result);
 
+    }
+
+    @Test
+    void readyToDelivery() {
+        int idAuthenticated = 26;
+        int idOrder = 26;
+        String auth = "authToken";
+        AddOrderRequest addOrderRequest = new AddOrderRequest();
+        Optional<OrderEntity> orderEntity = Optional.of(new OrderEntity());
+        UserEntity userEntity = new UserEntity();
+        userEntity.setIdUser(33);
+
+        when(orderRepositoryJPA.findById(26)).thenReturn(orderEntity);
+
+        final String result = orderAdapter.readyToDelivery(idAuthenticated, idOrder, addOrderRequest, auth);
+
+        Assertions.assertEquals("Esta orden no ha pasado por la etapa de preparacion", result);
+    }
+
+    @Test
+    void readyToDelivery_StateCheck() {
+        int idAuthenticated = 26;
+        int idOrder = 26;
+        String auth = "authToken";
+        AddOrderRequest addOrderRequest = new AddOrderRequest();
+        Optional<OrderEntity> orderEntity = Optional.of(new OrderEntity());
+        orderEntity.get().setState("preparando");
+        UserEntity userEntity = new UserEntity();
+        userEntity.setIdUser(33);
+
+        when(orderRepositoryJPA.findById(26)).thenReturn(orderEntity);
+
+        final String result = orderAdapter.readyToDelivery(idAuthenticated, idOrder, addOrderRequest, auth);
+
+        Assertions.assertEquals("El pedido debe estar en estado listo", result);
+    }
+
+    @Test
+    void readyToDelivery_Order() {
+        // Arrange
+        int id = 1;
+        AddOrderRequest orderRequest = new AddOrderRequest();
+        orderRequest.setState("listo");
+        String auth = "authToken";
+
+        Optional<OrderEntity> orderEntity = Optional.of(new OrderEntity());
+        orderEntity.get().setState("preparando"); // Simulate order is in preparing state
+        orderEntity.get().setUserId(33); // Set user ID for order
+        when(orderRepositoryJPA.findById(id)).thenReturn(orderEntity);
+
+        // Simulate that order is ready
+        String expectedPin = "1234"; // Simulated PIN
+        orderEntity.get().setPin(expectedPin);
+
+        UserEntity client = new UserEntity();
+        client.setPhone("31049225805"); // Simulated client phone number
+        when(externalApiConsumption.getRolByIdUser(33, auth)).thenReturn(client);
+
+        // Act
+        String result = orderAdapter.readyToDelivery(1, id, orderRequest, auth);
+
+        // Assert
+        Assertions.assertNotNull(result);
     }
 }

@@ -1,4 +1,4 @@
-package plazoleta.adapters.driving.http.JwtService;
+package plazoleta.adapters.driving.http.utils.JwtService;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

@@ -5,8 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import plazoleta.adapters.driven.jpa.msql.entity.restaurant.UserEntity;
-import plazoleta.adapters.driving.http.ConsumerUser;
-import plazoleta.adapters.driving.http.JwtService.JwtTokenValidator;
+import plazoleta.adapters.driven.jpa.msql.utils.consumer.ExternalApiConsumption;
+import plazoleta.adapters.driving.http.utils.JwtService.JwtTokenValidator;
 import plazoleta.adapters.driving.http.dto.request.order.AddOrderRequest;
 import plazoleta.adapters.driving.http.exception.ErrorAccess;
 import plazoleta.adapters.driving.http.mapper.IOrderRequestMapper;
@@ -14,7 +14,6 @@ import plazoleta.domain.api.IOrderServicePort;
 import plazoleta.domain.model.pedido.Order;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/order")
@@ -24,7 +23,7 @@ public class OrderRestController {
     private final IOrderServicePort orderServicePort;
     private final JwtTokenValidator jwtTokenValidator;
 
-    private final ConsumerUser consumerUser;
+    private final ExternalApiConsumption consumerUser;
 
     @PostMapping("/create")
     public ResponseEntity<Order> save(@RequestBody AddOrderRequest orderRequest,
@@ -62,5 +61,14 @@ public class OrderRestController {
         String auth = token.substring(7);
         int idAuthenticated = jwtTokenValidator.getUserIdFromToken(auth);
         return new ResponseEntity<>(orderServicePort.takeOrder(idAuthenticated, id, orderRequest), HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}/ready-to-delivery")
+    public ResponseEntity<String> readyToDelivery (@PathVariable int id,
+                                           @RequestBody AddOrderRequest orderRequest,
+                                           @RequestHeader("Authorization") String token) {
+        String auth = token.substring(7);
+        int idAuthenticated = jwtTokenValidator.getUserIdFromToken(auth);
+        return new ResponseEntity<>(orderServicePort.readyToDelivery(idAuthenticated, id, orderRequest, auth), HttpStatus.OK);
     }
 }

@@ -51,4 +51,9 @@ public class OrderCaseUse implements IOrderServicePort {
         return orderPersistencePort.takeOrder(idAuthenticated, idOrder, orderRequest);
     }
 
+    @Override
+    public String readyToDelivery(int idAuthenticated, int id, AddOrderRequest orderRequest, String auth) {
+        return orderPersistencePort.readyToDelivery(idAuthenticated, id, orderRequest, auth);
+    }
+
 }

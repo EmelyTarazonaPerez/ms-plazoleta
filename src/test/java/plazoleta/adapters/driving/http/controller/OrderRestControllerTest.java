@@ -14,16 +14,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import plazoleta.adapters.driven.jpa.msql.entity.restaurant.UserEntity;
-import plazoleta.adapters.driving.http.ConsumerUser;
-import plazoleta.adapters.driving.http.JwtService.JwtTokenValidator;
+import plazoleta.adapters.driven.jpa.msql.utils.consumer.ExternalApiConsumption;
+import plazoleta.adapters.driving.http.utils.JwtService.JwtTokenValidator;
 import plazoleta.adapters.driving.http.dto.request.order.AddOrderRequest;
-import plazoleta.adapters.driving.http.dto.request.order.AssociatedEntity;
-import plazoleta.adapters.driving.http.dto.response.RestaurantResponse;
 import plazoleta.adapters.driving.http.mapper.IOrderRequestMapper;
 import plazoleta.domain.api.IOrderServicePort;
 import plazoleta.domain.model.pedido.Order;
-import plazoleta.domain.model.plate.Plate;
-import plazoleta.domain.model.restaurant.Restaurant;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -41,7 +37,7 @@ class OrderRestControllerTest {
     @Mock
     private IOrderRequestMapper orderRequestMapper;
     @Mock
-    private ConsumerUser consumerUser;
+    private ExternalApiConsumption consumerUser;
     @Mock
     private JwtTokenValidator jwtTokenValidator;
     @InjectMocks

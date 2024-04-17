@@ -1,4 +1,4 @@
-package plazoleta.adapters.driving.http.JwtService;
+package plazoleta.adapters.driving.http.utils.JwtService;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;

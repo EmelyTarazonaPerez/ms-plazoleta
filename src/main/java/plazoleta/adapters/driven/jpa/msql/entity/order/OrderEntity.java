@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import plazoleta.adapters.driven.jpa.msql.entity.plate.PlateEntity;
+import plazoleta.domain.model.pedido.State;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -33,6 +34,7 @@ public class OrderEntity {
     private int restaurantId;
     @OneToMany(mappedBy = "order")
     private List<OrderPlateEntity> plateEntityList;
+    private String pin;
 
     public void setChefId(Integer chefId) {
         if (chefId == null) {

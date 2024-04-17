@@ -3,6 +3,7 @@ package plazoleta.domain.api.useCase;
 import plazoleta.adapters.driven.jpa.msql.entity.order.OrderEntity;
 import plazoleta.adapters.driven.jpa.msql.entity.restaurant.UserEntity;
 import plazoleta.adapters.driving.http.dto.request.order.AddOrderRequest;
+import plazoleta.adapters.driving.http.dto.request.order.OrderStateModificationDTO;
 import plazoleta.domain.api.IOrderServicePort;
 import plazoleta.domain.exception.ExceptionValid;
 import plazoleta.domain.model.pedido.Order;
@@ -54,6 +55,11 @@ public class OrderCaseUse implements IOrderServicePort {
     @Override
     public String readyToDelivery(int idAuthenticated, int id, AddOrderRequest orderRequest, String auth) {
         return orderPersistencePort.readyToDelivery(idAuthenticated, id, orderRequest, auth);
+    }
+
+    @Override
+    public String deliveryOrder(int idAuthenticated, int id, OrderStateModificationDTO orderRequest, String auth) {
+        return orderPersistencePort.deliveryOrder(idAuthenticated, id, orderRequest, auth);
     }
 
 }

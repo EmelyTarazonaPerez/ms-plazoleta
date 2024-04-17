@@ -10,8 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import plazoleta.adapters.driven.jpa.msql.entity.order.OrderEntity;
 import plazoleta.adapters.driven.jpa.msql.entity.restaurant.RestaurantEntity;
 import plazoleta.adapters.driven.jpa.msql.entity.restaurant.UserEntity;
-import plazoleta.adapters.driven.jpa.msql.exception.ErrorAccessModifi;
-import plazoleta.adapters.driven.jpa.msql.exception.ErrorBaseDatos;
+import plazoleta.adapters.driven.jpa.msql.exception.ErrorAccessModified;
 import plazoleta.adapters.driven.jpa.msql.mapper.IOrderEntityMapper;
 import plazoleta.adapters.driven.jpa.msql.repository.IOrderRepositoryJPA;
 import plazoleta.adapters.driven.jpa.msql.repository.IRestaurantRepositoryJPA;
@@ -74,7 +73,7 @@ class OrderAdapterTest {
         OrderEntity orderEntity = new OrderEntity();
         orderEntity.setState("pendiente");
         when(orderRepositoryJPA.findByUserId(33)).thenReturn(Optional.of(orderEntity));
-        assertThrows(ErrorAccessModifi.class, () -> orderAdapter.save(order));
+        assertThrows(ErrorAccessModified.class, () -> orderAdapter.save(order));
     }
 
 

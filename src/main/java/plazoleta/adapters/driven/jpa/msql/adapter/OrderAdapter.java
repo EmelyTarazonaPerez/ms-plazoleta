@@ -6,21 +6,20 @@ import org.springframework.stereotype.Service;
 import plazoleta.adapters.driven.jpa.msql.entity.order.OrderEntity;
 import plazoleta.adapters.driven.jpa.msql.entity.restaurant.RestaurantEntity;
 import plazoleta.adapters.driven.jpa.msql.entity.restaurant.UserEntity;
-import plazoleta.adapters.driven.jpa.msql.exception.ErrorAccessModifi;
+import plazoleta.adapters.driven.jpa.msql.exception.ErrorAccessModified;
 import plazoleta.adapters.driven.jpa.msql.exception.ProductNotFount;
 import plazoleta.adapters.driven.jpa.msql.mapper.IOrderEntityMapper;
 import plazoleta.adapters.driven.jpa.msql.repository.IOrderRepositoryJPA;
 import plazoleta.adapters.driven.jpa.msql.repository.IRestaurantRepositoryJPA;
 import plazoleta.adapters.driven.jpa.msql.utils.consumer.ExternalApiConsumption;
 import plazoleta.adapters.driving.http.dto.request.order.AddOrderRequest;
+import plazoleta.adapters.driving.http.dto.request.order.OrderStateModificationDTO;
 import plazoleta.domain.model.pedido.Order;
 import plazoleta.domain.spi.IOrderPersistencePort;
-import plazoleta.domain.spi.IRestaurantPersistencePort;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static plazoleta.adapters.driven.jpa.msql.utils.DataOrdering.getOrdering;
 import static plazoleta.adapters.driven.jpa.msql.utils.constants.ConstanstUtils.*;
@@ -39,7 +38,7 @@ public class OrderAdapter implements IOrderPersistencePort {
     public Order save(Order order) {
         order.setState("pendiente");
         if (validOrderUser(order.getUserId())) {
-            throw new ErrorAccessModifi(MESSAGE_ORDER_PROCESS);
+            throw new ErrorAccessModified(MESSAGE_ORDER_PROCESS);
         }
         return orderEntityMapper.toOrder(orderRepositoryJPA.save(orderEntityMapper.toOrderEntity(order)));
     }
@@ -76,7 +75,7 @@ public class OrderAdapter implements IOrderPersistencePort {
     public String readyToDelivery(int idAuthenticated, int id, AddOrderRequest orderRequest, String auth) {
         try {
             Optional<OrderEntity> orderEntity = getOrderById(id);
-            if (!isOrderPreparing(orderEntity)) {
+            if (!isOrderInProcess (orderEntity, "preparando")) {
                 return STAGE_PRODUCT_NOT_PREPARING;
             }
 
@@ -96,17 +95,41 @@ public class OrderAdapter implements IOrderPersistencePort {
         }
     }
 
+    @Override
+    public String deliveryOrder(int idAuthenticated, int id, OrderStateModificationDTO orderRequest, String auth) {
+        try {
+            Optional<OrderEntity> orderEntity = getOrderById(id);
+            if (!isOrderInProcess (orderEntity, "listo")) {
+                return STAGE_PRODUCT_NOT_PREPARING;
+            }
+            String pinBD = orderEntity.get().getPin();
+            String customerPin = orderRequest.getPin();
+
+            isValidPin(pinBD, customerPin);
+            updateOrderState(orderEntity, "entregado");
+            orderRepositoryJPA.save(orderEntity.get());
+            return "El estado de producto ya fue cambiado a entregado";
+        } catch (Exception e){
+            throw new ProductNotFount("Message" + e);
+        }
+    }
+
     private Optional<OrderEntity> getOrderById(int id) {
         return orderRepositoryJPA.findById(id);
     }
-    private boolean isOrderPreparing(Optional<OrderEntity> orderEntity) {
-        return orderEntity.isPresent() && Objects.equals(orderEntity.get().getState(), "preparando");
+    private boolean isOrderInProcess (Optional<OrderEntity> orderEntity, String process) {
+        return orderEntity.isPresent() && Objects.equals(orderEntity.get().getState(), process);
     }
     public UserEntity getClientDetails(Optional<OrderEntity> orderEntity, String auth) {
         return externalApiConsumption.getRolByIdUser(orderEntity.get().getUserId(), auth);
     }
     private void updateOrderState(Optional<OrderEntity> orderEntity, String newState) {
         orderEntity.ifPresent(order -> order.setState(newState));
+    }
+    private void isValidPin (String pinBD, String customerPin) {
+        if (!Objects.equals(pinBD, customerPin)) {
+            throw new ErrorAccessModified("El pin proporcionado no es el mismo asociado a la order");
+        }
     }
 
 }

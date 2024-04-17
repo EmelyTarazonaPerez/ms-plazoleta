@@ -114,4 +114,23 @@ class OrderRestControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(expected, response.getBody());
     }
+
+    @Test
+    void cancelOrder_SuccessfulCancellation() {
+        // Arrange
+        int id = 1;
+        String token = "Bearer mockToken";
+
+        when(jwtTokenValidator.getUserIdFromToken("mockToken")).thenReturn(1);
+        when(orderServicePort.cancelOrder(1, id)).thenReturn("Su orden fue cancelada correctamente");
+
+        // Act
+        ResponseEntity<String> response = orderRestController.cancelOrder(id, token);
+
+        // Assert
+        verify(jwtTokenValidator).getUserIdFromToken("mockToken");
+        verify(orderServicePort).cancelOrder(1, id);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("Su orden fue cancelada correctamente", response.getBody());
+    }
 }

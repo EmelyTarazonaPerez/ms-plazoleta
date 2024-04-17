@@ -75,7 +75,7 @@ public class OrderAdapter implements IOrderPersistencePort {
     public String readyToDelivery(int idAuthenticated, int id, AddOrderRequest orderRequest, String auth) {
         try {
             Optional<OrderEntity> orderEntity = getOrderById(id);
-            if (!isOrderInProcess (orderEntity, "preparando")) {
+            if (!isOrderInProcess(orderEntity, "preparando")) {
                 return STAGE_PRODUCT_NOT_PREPARING;
             }
 
@@ -91,7 +91,7 @@ public class OrderAdapter implements IOrderPersistencePort {
                 return STAGE_PRODUCT_NOT_READY;
             }
         } catch (ProductNotFount e) {
-           throw new ProductNotFount(NO_FOUNT_ORDER);
+            throw new ProductNotFount(NO_FOUNT_ORDER);
         }
     }
 
@@ -99,7 +99,7 @@ public class OrderAdapter implements IOrderPersistencePort {
     public String deliveryOrder(int idAuthenticated, int id, OrderStateModificationDTO orderRequest, String auth) {
         try {
             Optional<OrderEntity> orderEntity = getOrderById(id);
-            if (!isOrderInProcess (orderEntity, "listo")) {
+            if (!isOrderInProcess(orderEntity, "listo")) {
                 return STAGE_PRODUCT_NOT_PREPARING;
             }
             String pinBD = orderEntity.get().getPin();
@@ -109,24 +109,42 @@ public class OrderAdapter implements IOrderPersistencePort {
             updateOrderState(orderEntity, "entregado");
             orderRepositoryJPA.save(orderEntity.get());
             return "El estado de producto ya fue cambiado a entregado";
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new ProductNotFount("Message" + e);
         }
     }
 
+    @Override
+    public String cancelOrder(int idAuthenticated, int id) {
+        Optional<OrderEntity> orderEntity = getOrderById(id);
+        if (orderEntity.get().getUserId() != idAuthenticated) {
+            throw new ProductNotFount("El usuario no tiene una orden con ese id");
+        }
+        if (!isOrderInProcess(orderEntity, "pendiente")) {
+            return "Lo sentimos, tu pedido ya está en preparación y no puede cancelarse";
+        }
+        orderRepositoryJPA.delete(orderEntity.get());
+        return "Su orden fue cancelada correctamente";
+    }
+
+
     private Optional<OrderEntity> getOrderById(int id) {
         return orderRepositoryJPA.findById(id);
     }
-    private boolean isOrderInProcess (Optional<OrderEntity> orderEntity, String process) {
+
+    private boolean isOrderInProcess(Optional<OrderEntity> orderEntity, String process) {
         return orderEntity.isPresent() && Objects.equals(orderEntity.get().getState(), process);
     }
+
     private UserEntity getClientDetails(Optional<OrderEntity> orderEntity, String auth) {
         return externalApiConsumption.getRolByIdUser(orderEntity.get().getUserId(), auth);
     }
+
     private void updateOrderState(Optional<OrderEntity> orderEntity, String newState) {
         orderEntity.ifPresent(order -> order.setState(newState));
     }
-    private void isValidPin (String pinBD, String customerPin) {
+
+    private void isValidPin(String pinBD, String customerPin) {
         if (!Objects.equals(pinBD, customerPin)) {
             throw new ErrorAccessModified("El pin proporcionado no es el mismo asociado a la order");
         }

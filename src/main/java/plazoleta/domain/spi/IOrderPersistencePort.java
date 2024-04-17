@@ -12,4 +12,5 @@ public interface IOrderPersistencePort {
     Order takeOrder (int idAuthenticated, int idOrder, AddOrderRequest orderRequest);
     String readyToDelivery(int idAuthenticated, int id, AddOrderRequest orderRequest, String auth);
     String deliveryOrder(int idAuthenticated, int id, OrderStateModificationDTO orderRequest, String auth);
+    String cancelOrder(int idAuthenticated, int id);
 }

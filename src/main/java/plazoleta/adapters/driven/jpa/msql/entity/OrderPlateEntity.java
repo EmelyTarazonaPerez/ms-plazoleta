@@ -1,11 +1,13 @@
-package plazoleta.adapters.driven.jpa.msql.entity.order;
+package plazoleta.adapters.driven.jpa.msql.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import plazoleta.adapters.driven.jpa.msql.entity.plate.PlateEntity;
+
+import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Getter
@@ -13,19 +15,25 @@ import plazoleta.adapters.driven.jpa.msql.entity.plate.PlateEntity;
 @Table(name = "pedido_plate")
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class OrderPlateEntity {
+public class OrderPlateEntity implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+/*
+    @Id
+    private Long idOrder;
 
-    @ManyToOne
+    @Id
+    private Long idPlate; */
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_pedido")
     private OrderEntity order;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_plate")
     private PlateEntity plate;
 
-    @Column(name = "amount")
     private int amount;
 }

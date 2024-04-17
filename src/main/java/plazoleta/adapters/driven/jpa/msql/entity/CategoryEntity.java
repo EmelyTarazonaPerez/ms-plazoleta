@@ -1,4 +1,4 @@
-package plazoleta.adapters.driven.jpa.msql.entity.plate;
+package plazoleta.adapters.driven.jpa.msql.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

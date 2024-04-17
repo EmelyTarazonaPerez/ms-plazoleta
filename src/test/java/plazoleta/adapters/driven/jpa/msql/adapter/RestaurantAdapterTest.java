@@ -11,11 +11,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import plazoleta.adapters.driven.jpa.msql.entity.restaurant.RestaurantEntity;
+import plazoleta.adapters.driven.jpa.msql.entity.RestaurantEntity;
 import plazoleta.adapters.driven.jpa.msql.mapper.IRestaurantEntityMapper;
 import plazoleta.adapters.driven.jpa.msql.repository.IRestaurantRepositoryJPA;
 import plazoleta.domain.model.restaurant.Restaurant;
-import plazoleta.domain.model.restaurant.User;
 
 import java.util.ArrayList;
 import java.util.List;

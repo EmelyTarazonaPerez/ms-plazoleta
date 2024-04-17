@@ -7,9 +7,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import plazoleta.adapters.driven.jpa.msql.entity.order.OrderEntity;
-import plazoleta.adapters.driven.jpa.msql.entity.restaurant.RestaurantEntity;
-import plazoleta.adapters.driven.jpa.msql.entity.restaurant.UserEntity;
+import plazoleta.adapters.driven.jpa.msql.entity.OrderEntity;
+import plazoleta.adapters.driven.jpa.msql.entity.RestaurantEntity;
+import plazoleta.adapters.driven.jpa.msql.entity.UserEntity;
 import plazoleta.adapters.driven.jpa.msql.exception.ErrorAccessModified;
 import plazoleta.adapters.driven.jpa.msql.exception.ProductNotFount;
 import plazoleta.adapters.driven.jpa.msql.mapper.IOrderEntityMapper;
@@ -58,13 +58,15 @@ class OrderAdapterTest {
     void save() {
         Order order = new Order( 1, 33, LocalDate.now(), "pendiente", 26, 6, null);
         OrderEntity orderEntity = new OrderEntity();
+        UserEntity userChef = new UserEntity();
+        String token = "hola_soy_token";
 
         when(orderEntityMapper.toOrderEntity(order)).thenReturn(orderEntity);
         when(orderRepositoryJPA.findByUserId(33)).thenReturn(Optional.empty());
         when(orderRepositoryJPA.save(orderEntity)).thenReturn(orderEntity);
         when(orderEntityMapper.toOrder(orderEntity)).thenReturn(order);
 
-        final Order result = orderAdapter.save(order);
+        final Order result = orderAdapter.save(order,userChef, token );
 
         Assertions.assertNotNull(result);
 
@@ -74,9 +76,11 @@ class OrderAdapterTest {
     @Test
     void save_OrderEntityPendiente() {
         OrderEntity orderEntity = new OrderEntity();
+        UserEntity userChef = new UserEntity();
+        String token = "hola_soy_token";
         orderEntity.setState("pendiente");
         when(orderRepositoryJPA.findByUserId(33)).thenReturn(Optional.of(orderEntity));
-        assertThrows(ErrorAccessModified.class, () -> orderAdapter.save(order));
+        assertThrows(ErrorAccessModified.class, () -> orderAdapter.save(order, userChef, token));
     }
 
 
@@ -156,7 +160,7 @@ class OrderAdapterTest {
 
         final String result = orderAdapter.readyToDelivery(idAuthenticated, idOrder, addOrderRequest, auth);
 
-        Assertions.assertEquals("Esta orden no ha pasado por la etapa de preparacion", result);
+        Assertions.assertEquals("This order has not gone through the preparation stage", result);
     }
 
     @Test
@@ -195,7 +199,7 @@ class OrderAdapterTest {
         orderEntity.get().setPin(expectedPin);
 
         UserEntity client = new UserEntity();
-        client.setPhone("31049225805"); // Simulated client phone number
+        client.setPhone("31049225855"); // Simulated client phone number
         when(externalApiConsumption.getRolByIdUser(33, auth)).thenReturn(client);
 
         // Act

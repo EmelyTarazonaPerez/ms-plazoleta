@@ -1,7 +1,7 @@
 package plazoleta.adapters.driven.jpa.msql.mapper;
 
 import org.mapstruct.*;
-import plazoleta.adapters.driven.jpa.msql.entity.order.OrderEntity;
+import plazoleta.adapters.driven.jpa.msql.entity.OrderEntity;
 import plazoleta.domain.model.pedido.Order;
 
 import java.util.List;
@@ -18,7 +18,7 @@ public interface IOrderEntityMapper {
             @Mapping(source = "state", target = "state"),
             @Mapping(source = "chefId", target = "chefId"),
             @Mapping(source = "restaurantId", target = "restaurantId"),
-            @Mapping(source = "plateEntityList", target = "plates"),
+            @Mapping(source = "orderPlateList", target = "listPlates"),
     })
     Order toOrder (OrderEntity order);
     List<Order> toOrderList(List<OrderEntity> byState);

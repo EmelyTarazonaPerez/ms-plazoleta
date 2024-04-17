@@ -2,8 +2,11 @@ package plazoleta.domain.model.pedido;
 
 import plazoleta.domain.model.plate.Plate;
 
+import java.util.List;
+
 public class OrderPlate {
     private int id;
+    private Order order;
     private Plate plate;
     private int amount;
 

@@ -9,6 +9,7 @@ import plazoleta.adapters.driven.jpa.msql.adapter.RestaurantAdapter;
 import plazoleta.adapters.driven.jpa.msql.mapper.IOrderEntityMapper;
 import plazoleta.adapters.driven.jpa.msql.mapper.IPlateEntityMapper;
 import plazoleta.adapters.driven.jpa.msql.mapper.IRestaurantEntityMapper;
+import plazoleta.adapters.driven.jpa.msql.repository.IOrderPlateRepositoryJPA;
 import plazoleta.adapters.driven.jpa.msql.repository.IOrderRepositoryJPA;
 import plazoleta.adapters.driven.jpa.msql.repository.IPlateRepositoryJPA;
 import plazoleta.adapters.driven.jpa.msql.repository.IRestaurantRepositoryJPA;
@@ -37,6 +38,8 @@ public class BeanConfiguration {
     private final IOrderEntityMapper orderEntityMapper;
 
     private final ExternalApiConsumption externalApiConsumption;
+    private final IOrderPlateRepositoryJPA orderPlateRepositoryJPA;
+
 
     @Bean
     public IRestaurantPersistencePort restaurantPersistencePort(){
@@ -55,7 +58,13 @@ public class BeanConfiguration {
     }
     @Bean
     public IOrderPersistencePort persistencePort () {
-        return new OrderAdapter(orderRepositoryJPA, orderEntityMapper, restaurantRepositoryJPA, externalApiConsumption);
+        return new OrderAdapter(
+                orderRepositoryJPA,
+                orderEntityMapper,
+
+                externalApiConsumption,
+                orderPlateRepositoryJPA,
+                restaurantRepositoryJPA);
     }
     @Bean
     public IOrderServicePort orderServicePort () {

@@ -4,7 +4,7 @@ package plazoleta.adapters.driven.jpa.msql.adapter;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import plazoleta.adapters.driven.jpa.msql.entity.restaurant.RestaurantEntity;
+import plazoleta.adapters.driven.jpa.msql.entity.RestaurantEntity;
 import plazoleta.adapters.driven.jpa.msql.mapper.IRestaurantEntityMapper;
 import plazoleta.adapters.driven.jpa.msql.repository.IRestaurantRepositoryJPA;
 import plazoleta.domain.model.restaurant.Restaurant;

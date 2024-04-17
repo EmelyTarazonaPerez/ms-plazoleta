@@ -8,8 +8,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.*;
-import plazoleta.adapters.driven.jpa.msql.entity.plate.PlateEntity;
-import plazoleta.adapters.driven.jpa.msql.entity.restaurant.RestaurantEntity;
+import plazoleta.adapters.driven.jpa.msql.entity.PlateEntity;
+import plazoleta.adapters.driven.jpa.msql.entity.RestaurantEntity;
 import plazoleta.adapters.driven.jpa.msql.exception.ErrorBaseDatos;
 import plazoleta.adapters.driven.jpa.msql.mapper.IPlateEntityMapper;
 import plazoleta.adapters.driven.jpa.msql.repository.IPlateRepositoryJPA;
@@ -74,7 +74,7 @@ class PlateAdapterTest {
         int idAuthenticate = 25;
         PlateEntity plateEntity = new PlateEntity(30, "Hamburguesa",
                 1, "Deliciosa hamburguesa",
-                1500, 6, "https://ejemplo.com/hamburguesa.jpg", true);
+                1500, 6, "https://ejemplo.com/hamburguesa.jpg", true, null);
 
         RestaurantEntity restaurantEntity = new RestaurantEntity(30, "Hamburguesa",
                 "any", 25,

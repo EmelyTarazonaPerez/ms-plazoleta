@@ -6,7 +6,7 @@ import org.mapstruct.Mappings;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 import org.springframework.data.domain.Page;
-import plazoleta.adapters.driven.jpa.msql.entity.restaurant.RestaurantEntity;
+import plazoleta.adapters.driven.jpa.msql.entity.RestaurantEntity;
 import plazoleta.domain.model.restaurant.Restaurant;
 
 import java.util.List;

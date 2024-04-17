@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import plazoleta.adapters.driven.jpa.msql.entity.restaurant.UserEntity;
+import plazoleta.adapters.driven.jpa.msql.entity.UserEntity;
 import plazoleta.adapters.driven.jpa.msql.utils.consumer.ExternalApiConsumption;
 import plazoleta.adapters.driving.http.dto.request.AddRestaurantRequest;
 import plazoleta.adapters.driving.http.dto.response.RestaurantResponse;

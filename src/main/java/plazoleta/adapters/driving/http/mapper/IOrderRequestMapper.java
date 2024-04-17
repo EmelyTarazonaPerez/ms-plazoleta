@@ -14,12 +14,7 @@ public interface IOrderRequestMapper {
 
     @Mappings(value = {
             @Mapping(target = "id", ignore = true),
-            @Mapping(source = "userId", target = "userId"),
-            @Mapping(source = "date", target = "date"),
-            @Mapping(source = "state", target = "state"),
-            @Mapping(source = "chefId", target = "chefId"),
-            @Mapping(source = "restaurantId", target = "restaurantId"),
-            @Mapping(source = "plates", target = "plates")
+            @Mapping(source = "plates", target = "listPlates"),
     })
     Order toOrder(AddOrderRequest orderRequest);
 }

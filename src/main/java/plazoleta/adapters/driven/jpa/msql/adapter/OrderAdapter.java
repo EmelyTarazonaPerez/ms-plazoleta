@@ -3,12 +3,14 @@ package plazoleta.adapters.driven.jpa.msql.adapter;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import plazoleta.adapters.driven.jpa.msql.entity.order.OrderEntity;
-import plazoleta.adapters.driven.jpa.msql.entity.restaurant.RestaurantEntity;
-import plazoleta.adapters.driven.jpa.msql.entity.restaurant.UserEntity;
+import plazoleta.adapters.driven.jpa.msql.entity.OrderEntity;
+import plazoleta.adapters.driven.jpa.msql.entity.OrderPlateEntity;
+import plazoleta.adapters.driven.jpa.msql.entity.RestaurantEntity;
+import plazoleta.adapters.driven.jpa.msql.entity.UserEntity;
 import plazoleta.adapters.driven.jpa.msql.exception.ErrorAccessModified;
 import plazoleta.adapters.driven.jpa.msql.exception.ProductNotFount;
 import plazoleta.adapters.driven.jpa.msql.mapper.IOrderEntityMapper;
+import plazoleta.adapters.driven.jpa.msql.repository.IOrderPlateRepositoryJPA;
 import plazoleta.adapters.driven.jpa.msql.repository.IOrderRepositoryJPA;
 import plazoleta.adapters.driven.jpa.msql.repository.IRestaurantRepositoryJPA;
 import plazoleta.adapters.driven.jpa.msql.utils.consumer.ExternalApiConsumption;
@@ -17,6 +19,7 @@ import plazoleta.adapters.driving.http.dto.request.order.OrderStateModificationD
 import plazoleta.domain.model.pedido.Order;
 import plazoleta.domain.spi.IOrderPersistencePort;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -31,16 +34,31 @@ import static plazoleta.adapters.driven.jpa.msql.utils.twilio.TwilioServiceImpl.
 public class OrderAdapter implements IOrderPersistencePort {
     private final IOrderRepositoryJPA orderRepositoryJPA;
     private final IOrderEntityMapper orderEntityMapper;
-    private final IRestaurantRepositoryJPA restaurantRepositoryJPA;
+
     private final ExternalApiConsumption externalApiConsumption;
+    private final IOrderPlateRepositoryJPA orderPlateRepositoryJPA;
+    private final IRestaurantRepositoryJPA restaurantRepositoryJPA;
+
+    public void saveOrderPlate(OrderEntity order) {
+        List<OrderPlateEntity> listOrderPlates = order.getOrderPlateList();
+        for (OrderPlateEntity item : listOrderPlates) {
+            item.setOrder(order);
+            orderPlateRepositoryJPA.save(item);
+        }
+
+    }
 
     @Override
-    public Order save(Order order) {
+    public Order save(Order order, UserEntity infoChef, String token) {
         order.setState("pendiente");
         if (validOrderUser(order.getUserId())) {
             throw new ErrorAccessModified(MESSAGE_ORDER_PROCESS);
         }
-        return orderEntityMapper.toOrder(orderRepositoryJPA.save(orderEntityMapper.toOrderEntity(order)));
+        OrderEntity orderEntityNew = orderEntityMapper.toOrderEntity(order);
+        OrderEntity result = orderRepositoryJPA.save(orderEntityNew);
+
+        saveOrderPlate(result);
+        return orderEntityMapper.toOrder(result);
     }
 
     public boolean validOrderUser(int id) {
@@ -67,6 +85,7 @@ public class OrderAdapter implements IOrderPersistencePort {
         }
         orderEntity.get().setChefId(idAuthenticated);
         orderEntity.get().setState(orderRequest.getState());
+
 
         return orderEntityMapper.toOrder(orderRepositoryJPA.save(orderEntity.get()));
     }
@@ -148,6 +167,26 @@ public class OrderAdapter implements IOrderPersistencePort {
         if (!Objects.equals(pinBD, customerPin)) {
             throw new ErrorAccessModified("El pin proporcionado no es el mismo asociado a la order");
         }
+    }
+
+    private void sentTrazabilidad(
+            OrderEntity orderEntity,
+            String inputPreviousState,
+            String inputStateNew,
+            String auth,
+            UserEntity inputEmployeer
+    ) {
+        //Client
+        UserEntity client = getClientDetails(Optional.of(orderEntity), auth);
+
+        externalApiConsumption.
+                sendTraceability(
+                        client,
+                        inputPreviousState,
+                        inputStateNew,
+                        inputEmployeer,
+                        orderEntity.getDate(),
+                        orderEntity.getId());
     }
 
 }

@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import plazoleta.adapters.driven.jpa.msql.entity.restaurant.UserEntity;
+import plazoleta.adapters.driven.jpa.msql.entity.UserEntity;
 import plazoleta.adapters.driven.jpa.msql.utils.consumer.ExternalApiConsumption;
 import plazoleta.adapters.driving.http.dto.request.order.OrderStateModificationDTO;
 import plazoleta.adapters.driving.http.utils.JwtService.JwtTokenValidator;
@@ -37,7 +37,8 @@ public class OrderRestController {
             return new ResponseEntity<>(orderServicePort.create(
                     orderRequestMapper.toOrder(orderRequest),
                     idAuthenticated,
-                    infoChef),
+                    infoChef,
+                    auth),
                     HttpStatus.OK);
 
         } catch (Exception e) {

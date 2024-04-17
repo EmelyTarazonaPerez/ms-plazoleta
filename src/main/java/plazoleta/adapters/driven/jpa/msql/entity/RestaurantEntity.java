@@ -1,11 +1,10 @@
-package plazoleta.adapters.driven.jpa.msql.entity.restaurant;
+package plazoleta.adapters.driven.jpa.msql.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import plazoleta.adapters.driven.jpa.msql.entity.plate.PlateEntity;
+import plazoleta.adapters.driven.jpa.msql.entity.PlateEntity;
 
 import java.util.List;
 

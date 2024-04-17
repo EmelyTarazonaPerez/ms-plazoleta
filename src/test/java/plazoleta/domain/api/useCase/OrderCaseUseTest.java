@@ -5,8 +5,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import plazoleta.adapters.driven.jpa.msql.entity.restaurant.RolEntity;
-import plazoleta.adapters.driven.jpa.msql.entity.restaurant.UserEntity;
+import plazoleta.adapters.driven.jpa.msql.entity.RolEntity;
+import plazoleta.adapters.driven.jpa.msql.entity.UserEntity;
 import plazoleta.domain.model.pedido.Order;
 import plazoleta.domain.model.pedido.OrderPlate;
 import plazoleta.domain.model.plate.Plate;
@@ -14,7 +14,6 @@ import plazoleta.domain.spi.IOrderPersistencePort;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -32,6 +31,8 @@ class OrderCaseUseTest {
     @Test
     void create() {
         // Datos de prueba
+        UserEntity infoChef = new UserEntity();
+        String token = "TOKEN_DE_PRUEBA";
         Plate plate = new Plate(1, "any", 1,"any", 1000,6,null);
         OrderPlate orderPlate = new OrderPlate(1, plate, 5);
 
@@ -44,12 +45,11 @@ class OrderCaseUseTest {
 
         int idAuthUser = 33;
 
-        UserEntity infoChef = new UserEntity();
         infoChef.setIdRol(new RolEntity(3,"empleado", "any"));
 
-        when(orderPersistencePort.save(order)).thenReturn(order);
+        when(orderPersistencePort.save(order, infoChef, token)).thenReturn(order);
 
-        Order createdOrder = orderCaseUse.create(order, idAuthUser, infoChef);
+        Order createdOrder = orderCaseUse.create(order, idAuthUser, infoChef, token);
 
         assertEquals(order, createdOrder);
     }

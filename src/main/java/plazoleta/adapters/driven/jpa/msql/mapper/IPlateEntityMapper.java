@@ -1,7 +1,7 @@
 package plazoleta.adapters.driven.jpa.msql.mapper;
 
 import org.mapstruct.*;
-import plazoleta.adapters.driven.jpa.msql.entity.plate.PlateEntity;
+import plazoleta.adapters.driven.jpa.msql.entity.PlateEntity;
 import plazoleta.domain.model.plate.Plate;
 
 import java.util.List;

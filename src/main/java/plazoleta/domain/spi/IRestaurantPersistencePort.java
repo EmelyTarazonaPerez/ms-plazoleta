@@ -1,7 +1,7 @@
 package plazoleta.domain.spi;
 
 
-import plazoleta.adapters.driven.jpa.msql.entity.restaurant.RestaurantEntity;
+import plazoleta.adapters.driven.jpa.msql.entity.RestaurantEntity;
 import plazoleta.domain.model.restaurant.Restaurant;
 
 import java.util.List;

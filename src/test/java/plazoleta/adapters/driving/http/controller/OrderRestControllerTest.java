@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import plazoleta.adapters.driven.jpa.msql.entity.restaurant.UserEntity;
+import plazoleta.adapters.driven.jpa.msql.entity.UserEntity;
 import plazoleta.adapters.driven.jpa.msql.utils.consumer.ExternalApiConsumption;
 import plazoleta.adapters.driving.http.dto.request.order.OrderStateModificationDTO;
 import plazoleta.adapters.driving.http.utils.JwtService.JwtTokenValidator;

@@ -81,4 +81,15 @@ public class OrderRestController {
         int idAuthenticated = jwtTokenValidator.getUserIdFromToken(auth);
         return new ResponseEntity<>(orderServicePort.deliveryOrder(idAuthenticated, id, orderRequest, auth), HttpStatus.OK);
     }
+
+    @PutMapping("/{id}/cancel-order")
+    public ResponseEntity<String> cancelOrder (@PathVariable int id,
+                                                @RequestHeader("Authorization") String token) {
+        String auth = token.substring(7);
+        int idAuthenticated = jwtTokenValidator.getUserIdFromToken(auth);
+        return new ResponseEntity<>(orderServicePort.cancelOrder(idAuthenticated, id), HttpStatus.OK);
+    }
+
+
+
 }

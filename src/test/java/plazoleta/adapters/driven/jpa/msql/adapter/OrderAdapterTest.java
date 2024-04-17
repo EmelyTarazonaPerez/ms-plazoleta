@@ -276,4 +276,67 @@ class OrderAdapterTest {
         verify(orderRepositoryJPA, never()).save(orderEntity);
         assertEquals(STAGE_PRODUCT_NOT_PREPARING, result);
     }
+
+    @Test
+    void cancelOrder_SuccessfulCancellation() {
+        // Arrange
+        int idAuthenticated = 1;
+        int id = 2;
+
+        OrderEntity orderEntity = new OrderEntity();
+        orderEntity.setUserId(idAuthenticated);
+        orderEntity.setState("pendiente");
+
+        when(orderRepositoryJPA.findById(id)).thenReturn(Optional.of(orderEntity));
+
+        // Act
+        String result = orderAdapter.cancelOrder(idAuthenticated, id);
+
+        // Assert
+        verify(orderRepositoryJPA).findById(id);
+        verify(orderRepositoryJPA).delete(orderEntity);
+        assertEquals("Su orden fue cancelada correctamente", result);
+    }
+
+
+    @Test
+    void cancelOrder_InvalidUser() {
+        // Arrange
+        int idAuthenticated = 1;
+        int id = 2;
+
+        OrderEntity orderEntity = new OrderEntity();
+        orderEntity.setUserId(3); // Usuario diferente al autenticado
+        orderEntity.setState("pendiente");
+
+        when(orderRepositoryJPA.findById(id)).thenReturn(Optional.of(orderEntity));
+
+        // Act & Assert
+        assertThrows(ProductNotFount.class, () -> {
+            orderAdapter.cancelOrder(idAuthenticated, id);
+        });
+        verify(orderRepositoryJPA).findById(id);
+        verify(orderRepositoryJPA, never()).delete(orderEntity);
+    }
+
+    @Test
+    void cancelOrder_OrderInProcess() {
+        // Arrange
+        int idAuthenticated = 1;
+        int id = 2;
+
+        OrderEntity orderEntity = new OrderEntity();
+        orderEntity.setUserId(idAuthenticated);
+        orderEntity.setState("preparando"); // La orden no está en estado "pendiente"
+
+        when(orderRepositoryJPA.findById(id)).thenReturn(Optional.of(orderEntity));
+
+        // Act
+        String result = orderAdapter.cancelOrder(idAuthenticated, id);
+
+        // Assert
+        verify(orderRepositoryJPA).findById(id);
+        verify(orderRepositoryJPA, never()).delete(orderEntity);
+        assertEquals("Lo sentimos, tu pedido ya está en preparación y no puede cancelarse", result);
+    }
 }

@@ -29,7 +29,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST,"/order/create").hasAuthority("cliente")
                         .requestMatchers(HttpMethod.GET, "/order/get-all").hasAuthority("trabajador")
                         .requestMatchers(HttpMethod.PUT, "/order/update/{id}").hasAuthority("trabajador")
-
+                        .requestMatchers(HttpMethod.PUT, "order/{id}/deliver-order").hasAuthority("trabajador")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtTokenValidationFilter(tokenValidator), UsernamePasswordAuthenticationFilter.class)

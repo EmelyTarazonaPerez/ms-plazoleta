@@ -5,7 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import plazoleta.adapters.driven.jpa.msql.entity.plate.PlateEntity;
 import plazoleta.adapters.driven.jpa.msql.entity.restaurant.RestaurantEntity;
-import plazoleta.adapters.driven.jpa.msql.exception.ErrorAccessModifi;
+import plazoleta.adapters.driven.jpa.msql.exception.ErrorAccessModified;
 import plazoleta.adapters.driven.jpa.msql.exception.ErrorBaseDatos;
 import plazoleta.adapters.driven.jpa.msql.exception.ProductNotFount;
 import plazoleta.adapters.driven.jpa.msql.mapper.IPlateEntityMapper;
@@ -44,7 +44,7 @@ public class PlateAdapter implements IPlatePersistencePort {
     @Override
     public Plate update(Plate plate, int id, int idAutenticado) {
         if (accessModified(plate, idAutenticado)) {
-            throw new ErrorAccessModifi("Solo el propietario del restaurante puede modificar");
+            throw new ErrorAccessModified("Solo el propietario del restaurante puede modificar");
         }
         try {
             PlateEntity plateEntity = plateRepositoryJPA.findById(id).get();

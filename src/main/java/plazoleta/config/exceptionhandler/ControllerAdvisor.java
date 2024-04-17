@@ -11,10 +11,9 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import plazoleta.adapters.driven.jpa.msql.exception.ErrorAccessModifi;
+import plazoleta.adapters.driven.jpa.msql.exception.ErrorAccessModified;
 import plazoleta.adapters.driven.jpa.msql.exception.ErrorBaseDatos;
 import plazoleta.adapters.driven.jpa.msql.exception.ProductNotFount;
-import plazoleta.adapters.driving.http.controller.OrderRestController;
 import plazoleta.adapters.driving.http.exception.ErrorAccess;
 import plazoleta.domain.exception.ExceptionValid;
 
@@ -34,8 +33,8 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
                 ));
     }
 
-    @ExceptionHandler(ErrorAccessModifi.class)
-    public ResponseEntity<ExceptionResponse> handleErrorAccessModify(ErrorAccessModifi exception) {
+    @ExceptionHandler(ErrorAccessModified.class)
+    public ResponseEntity<ExceptionResponse> handleErrorAccessModify(ErrorAccessModified exception) {
         return ResponseEntity.badRequest().body(new ExceptionResponse
                 (String.format(exception.getMessage()),
                         HttpStatus.BAD_REQUEST.toString(), LocalDateTime.now()

@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import plazoleta.adapters.driven.jpa.msql.entity.restaurant.UserEntity;
 import plazoleta.adapters.driven.jpa.msql.utils.consumer.ExternalApiConsumption;
+import plazoleta.adapters.driving.http.dto.request.order.OrderStateModificationDTO;
 import plazoleta.adapters.driving.http.utils.JwtService.JwtTokenValidator;
 import plazoleta.adapters.driving.http.dto.request.order.AddOrderRequest;
 import plazoleta.adapters.driving.http.exception.ErrorAccess;
@@ -70,5 +71,14 @@ public class OrderRestController {
         String auth = token.substring(7);
         int idAuthenticated = jwtTokenValidator.getUserIdFromToken(auth);
         return new ResponseEntity<>(orderServicePort.readyToDelivery(idAuthenticated, id, orderRequest, auth), HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}/deliver-order")
+    public ResponseEntity<String> deliverOrder (@PathVariable int id,
+                                                @RequestBody OrderStateModificationDTO orderRequest,
+                                                @RequestHeader("Authorization") String token) {
+        String auth = token.substring(7);
+        int idAuthenticated = jwtTokenValidator.getUserIdFromToken(auth);
+        return new ResponseEntity<>(orderServicePort.deliveryOrder(idAuthenticated, id, orderRequest, auth), HttpStatus.OK);
     }
 }

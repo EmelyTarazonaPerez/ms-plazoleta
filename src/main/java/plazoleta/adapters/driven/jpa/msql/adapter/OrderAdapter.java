@@ -120,7 +120,7 @@ public class OrderAdapter implements IOrderPersistencePort {
     private boolean isOrderInProcess (Optional<OrderEntity> orderEntity, String process) {
         return orderEntity.isPresent() && Objects.equals(orderEntity.get().getState(), process);
     }
-    public UserEntity getClientDetails(Optional<OrderEntity> orderEntity, String auth) {
+    private UserEntity getClientDetails(Optional<OrderEntity> orderEntity, String auth) {
         return externalApiConsumption.getRolByIdUser(orderEntity.get().getUserId(), auth);
     }
     private void updateOrderState(Optional<OrderEntity> orderEntity, String newState) {

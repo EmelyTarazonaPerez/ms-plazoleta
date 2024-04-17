@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import plazoleta.adapters.driven.jpa.msql.entity.restaurant.UserEntity;
 import plazoleta.adapters.driven.jpa.msql.utils.consumer.ExternalApiConsumption;
+import plazoleta.adapters.driving.http.dto.request.order.OrderStateModificationDTO;
 import plazoleta.adapters.driving.http.utils.JwtService.JwtTokenValidator;
 import plazoleta.adapters.driving.http.dto.request.order.AddOrderRequest;
 import plazoleta.adapters.driving.http.mapper.IOrderRequestMapper;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -91,5 +93,25 @@ class OrderRestControllerTest {
                         .header(HttpHeaders.AUTHORIZATION, "Bearer TOKEN_DE_PRUEBA")
                 )
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void deliverOrder() throws Exception {
+        int id = 1;
+        String token = "Bearer mockToken";
+        String expected = "El estado de producto ya fue cambiado a entregado";
+        OrderStateModificationDTO orderRequest = new OrderStateModificationDTO();
+
+        when(jwtTokenValidator.getUserIdFromToken("mockToken")).thenReturn(1);
+        when(orderServicePort.deliveryOrder(1, id, orderRequest, "mockToken")).thenReturn(expected);
+
+        // Act
+        ResponseEntity<String> response = orderRestController.deliverOrder(id, orderRequest, token);
+
+        // Assert
+        verify(jwtTokenValidator).getUserIdFromToken("mockToken");
+        verify(orderServicePort).deliveryOrder(1, id, orderRequest, "mockToken");
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expected, response.getBody());
     }
 }

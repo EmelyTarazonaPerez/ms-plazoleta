@@ -1,10 +1,8 @@
 package plazoleta.adapters.driving.http.mapper;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
-import org.mapstruct.ReportingPolicy;
+import org.mapstruct.*;
 import plazoleta.adapters.driving.http.dto.request.AddRestaurantRequest;
+import plazoleta.adapters.driving.http.dto.response.RestaurantDto;
 import plazoleta.domain.model.restaurant.Restaurant;
 
 @Mapper(componentModel = "spring",
@@ -22,4 +20,7 @@ public interface IRestaurantRequestMapper {
             @Mapping(source = "nit", target = "nit"),
     })
     Restaurant toRestaurant (AddRestaurantRequest addRestaurantRequest);
+
+    @InheritInverseConfiguration
+    RestaurantDto toRestaurantDto(Restaurant restaurant);
 }

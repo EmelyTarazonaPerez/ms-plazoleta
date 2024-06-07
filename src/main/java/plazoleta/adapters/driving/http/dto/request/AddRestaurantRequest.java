@@ -4,7 +4,6 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import plazoleta.domain.model.restaurant.User;
 
 @Getter
 @AllArgsConstructor

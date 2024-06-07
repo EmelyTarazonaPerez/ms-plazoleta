@@ -1,4 +1,4 @@
-package plazoleta.adapters.driven.jpa.msql.utils;
+package plazoleta.adapters.driven.utils;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

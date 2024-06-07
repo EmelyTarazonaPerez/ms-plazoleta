@@ -1,4 +1,4 @@
-package plazoleta.adapters.driving.http.utils.JwtService;
+package plazoleta.config.Auth.configSecurity;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -11,14 +11,15 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+import plazoleta.adapters.driven.security.TokenAdapter;
 
 import java.io.IOException;
 import java.util.Collections;
 
 public class JwtTokenValidationFilter extends OncePerRequestFilter {
-    private final JwtTokenValidator tokenValidator;
+    private final TokenAdapter tokenValidator;
 
-    public JwtTokenValidationFilter(JwtTokenValidator tokenValidator) {
+    public JwtTokenValidationFilter(TokenAdapter tokenValidator) {
         this.tokenValidator = tokenValidator;
     }
 

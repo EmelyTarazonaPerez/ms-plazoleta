@@ -9,14 +9,14 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import plazoleta.adapters.driving.http.utils.JwtService.JwtTokenValidationFilter;
-import plazoleta.adapters.driving.http.utils.JwtService.JwtTokenValidator;
+import plazoleta.config.Auth.configSecurity.JwtTokenValidationFilter;
+import plazoleta.adapters.driven.security.TokenAdapter;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final JwtTokenValidator tokenValidator;
+    private final TokenAdapter tokenValidator;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity

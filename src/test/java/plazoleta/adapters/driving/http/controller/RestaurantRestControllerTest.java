@@ -15,7 +15,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import plazoleta.adapters.driven.jpa.msql.entity.RolEntity;
 import plazoleta.adapters.driven.jpa.msql.entity.UserEntity;
-import plazoleta.adapters.driven.jpa.msql.utils.consumer.ExternalApiConsumption;
+import plazoleta.adapters.driven.utils.consumer.ExternalAdapterApi;
 import plazoleta.adapters.driving.http.dto.request.AddRestaurantRequest;
 import plazoleta.adapters.driving.http.dto.response.RestaurantResponse;
 import plazoleta.adapters.driving.http.mapper.IRestaurantRequestMapper;
@@ -44,7 +44,7 @@ class RestaurantRestControllerTest {
     @Mock
     private IRestaurantResponseMapper restaurantResponseMapper;
     @Mock
-    private ExternalApiConsumption consumerUser;
+    private ExternalAdapterApi consumerUser;
 
     @InjectMocks
     RestaurantRestController restaurantRestController;

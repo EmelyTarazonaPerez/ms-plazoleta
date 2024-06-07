@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import plazoleta.adapters.driving.http.utils.JwtService.JwtTokenValidator;
+import plazoleta.adapters.driven.security.TokenAdapter;
 import plazoleta.adapters.driving.http.dto.request.plate.AddPlateRequest;
 import plazoleta.adapters.driving.http.mapper.IPlateResquestMapper;
 import plazoleta.domain.api.IPlateServicePort;
@@ -39,7 +39,7 @@ class PlateRestControllerTest {
     @Mock
     IPlateResquestMapper plateRequestMapper;
     @Mock
-    private JwtTokenValidator jwtTokenValidator;
+    private TokenAdapter jwtValidatorAdapter;
 
     @InjectMocks
     PlateRestController plateRestController;
@@ -130,7 +130,7 @@ class PlateRestControllerTest {
         int idAuthenticated = 29; // mock authenticated user id
 
         // Mocking behavior
-        when(jwtTokenValidator.getUserIdFromToken(anyString())).thenReturn(idAuthenticated);
+        when(jwtValidatorAdapter.getUserIdFromToken(anyString())).thenReturn(idAuthenticated);
         when(plateRequestMapper.toPlate(any(AddPlateRequest.class))).thenReturn(plateInput);
         when(plateServicePort.update(any(Plate.class), eq(id), eq(idAuthenticated))).thenReturn(plateInput);
 

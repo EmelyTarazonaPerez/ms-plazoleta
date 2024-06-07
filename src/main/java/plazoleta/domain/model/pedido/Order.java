@@ -1,4 +1,5 @@
 package plazoleta.domain.model.pedido;
+
 import plazoleta.adapters.driven.jpa.msql.entity.OrderPlateEntity;
 import plazoleta.adapters.driving.http.dto.request.order.AssociatedEntity;
 import plazoleta.domain.model.plate.Plate;
@@ -14,7 +15,8 @@ public class Order {
     private int chefId;
     private int restaurantId;
     private List<OrderPlate> listPlates;
-
+    private String pin;
+    public Order(){}
     public Order(int id, int userId, LocalDate date, String state, int chefId, int restaurantId, List<OrderPlate> listPlates) {
         this.id = id;
         this.userId = userId;
@@ -23,6 +25,14 @@ public class Order {
         this.chefId = chefId;
         this.restaurantId = restaurantId;
         this.listPlates = listPlates;
+    }
+
+    public String getPin() {
+        return pin;
+    }
+
+    public void setPin(String pin) {
+        this.pin = pin;
     }
 
     public int getId() {

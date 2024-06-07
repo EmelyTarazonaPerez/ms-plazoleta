@@ -10,6 +10,7 @@ import plazoleta.adapters.driven.jpa.msql.entity.UserEntity;
 import plazoleta.domain.model.pedido.Order;
 import plazoleta.domain.model.pedido.OrderPlate;
 import plazoleta.domain.model.plate.Plate;
+import plazoleta.domain.model.restaurant.User;
 import plazoleta.domain.spi.IOrderPersistencePort;
 
 import java.time.LocalDate;
@@ -31,7 +32,7 @@ class OrderCaseUseTest {
     @Test
     void create() {
         // Datos de prueba
-        UserEntity infoChef = new UserEntity();
+        User infoChef = new User();
         String token = "TOKEN_DE_PRUEBA";
         Plate plate = new Plate(1, "any", 1,"any", 1000,6,null);
         OrderPlate orderPlate = new OrderPlate(1, plate, 5);
@@ -47,7 +48,7 @@ class OrderCaseUseTest {
 
         infoChef.setIdRol(new RolEntity(3,"empleado", "any"));
 
-        when(orderPersistencePort.save(order, infoChef, token)).thenReturn(order);
+        when(orderPersistencePort.save(order)).thenReturn(order);
 
         Order createdOrder = orderCaseUse.create(order, idAuthUser, infoChef, token);
 

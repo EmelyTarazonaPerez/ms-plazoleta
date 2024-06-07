@@ -1,11 +1,11 @@
 package plazoleta.adapters.driving.http.mapper;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
-import org.mapstruct.ReportingPolicy;
+import org.mapstruct.*;
 import plazoleta.adapters.driving.http.dto.request.order.AddOrderRequest;
+import plazoleta.adapters.driving.http.dto.response.OrderDto;
 import plazoleta.domain.model.pedido.Order;
+
+import java.util.List;
 
 @Mapper(componentModel = "spring",
         unmappedSourcePolicy = ReportingPolicy.IGNORE,
@@ -17,4 +17,8 @@ public interface IOrderRequestMapper {
             @Mapping(source = "plates", target = "listPlates"),
     })
     Order toOrder(AddOrderRequest orderRequest);
+
+    @InheritInverseConfiguration
+    OrderDto toOrderDto(Order order);
+    List<OrderDto> toOrderDto(List<Order> order);
 }

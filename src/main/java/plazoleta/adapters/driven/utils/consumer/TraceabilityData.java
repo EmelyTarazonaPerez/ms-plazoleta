@@ -1,4 +1,4 @@
-package plazoleta.adapters.driven.jpa.msql.utils.consumer;
+package plazoleta.adapters.driven.utils.consumer;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

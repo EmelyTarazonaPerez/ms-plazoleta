@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface IPlatePersistencePort {
     Plate save (Plate plate);
-    Plate update (Plate plate, int id, int authenticatedId);
+    Plate update (Plate plate, int id);
     List<Plate> get(int page, int size, int category, int restaurant);
 }

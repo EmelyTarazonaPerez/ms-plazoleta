@@ -86,7 +86,7 @@ class PlateAdapterTest {
         when(plateEntityMapper.toPlate(plateEntity)).thenReturn(plateInput);
 
         // Act
-        Plate updatedPlate = plateAdapter.update(plateInput, id, idAuthenticate);
+        Plate updatedPlate = plateAdapter.update(plateInput, id);
 
         // Assert
         assertNotNull(updatedPlate);
@@ -98,9 +98,9 @@ class PlateAdapterTest {
         // Arrange
         int id = 50000;
         // Act & Assert
-        assertThrows(ErrorBaseDatos.class, () -> plateAdapter.update(plateInput, id, 1));
+        assertThrows(ErrorBaseDatos.class, () -> plateAdapter.update(plateInput, id));
     }
-
+/*
     @Test
     void accessModified() {
         RestaurantEntity restaurantEntity = new RestaurantEntity();
@@ -117,7 +117,7 @@ class PlateAdapterTest {
         assertThrows(ErrorBaseDatos.class, () -> plateAdapter.update(plateInput, 30, 1));
     }
 
-
+*/
     @Test
     void getPlateByRestaurant() {
         List<PlateEntity> plateEntityList = new ArrayList<>();

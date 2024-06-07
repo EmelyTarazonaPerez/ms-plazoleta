@@ -4,15 +4,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import plazoleta.adapters.driven.jpa.msql.entity.UserEntity;
-import plazoleta.adapters.driven.jpa.msql.utils.consumer.ExternalApiConsumption;
 import plazoleta.adapters.driving.http.dto.request.order.OrderStateModificationDTO;
-import plazoleta.adapters.driving.http.utils.JwtService.JwtTokenValidator;
 import plazoleta.adapters.driving.http.dto.request.order.AddOrderRequest;
+import plazoleta.adapters.driving.http.dto.response.OrderDto;
+import plazoleta.adapters.driving.http.dto.response.UserDto;
 import plazoleta.adapters.driving.http.exception.ErrorAccess;
 import plazoleta.adapters.driving.http.mapper.IOrderRequestMapper;
+import plazoleta.adapters.driving.http.mapper.IUserRequestMapper;
+import plazoleta.domain.api.IExternalApiServicePort;
 import plazoleta.domain.api.IOrderServicePort;
-import plazoleta.domain.model.pedido.Order;
+import plazoleta.domain.api.ITokenValidatorServicePort;
 
 import java.util.List;
 
@@ -22,47 +23,46 @@ import java.util.List;
 public class OrderRestController {
     private final IOrderRequestMapper orderRequestMapper;
     private final IOrderServicePort orderServicePort;
-    private final JwtTokenValidator jwtTokenValidator;
-
-    private final ExternalApiConsumption consumerUser;
+    private final ITokenValidatorServicePort tokenValidator;
+    private final IExternalApiServicePort consumerUser;
+    private final IUserRequestMapper userRequestMapper;
 
     @PostMapping("/create")
-    public ResponseEntity<Order> save(@RequestBody AddOrderRequest orderRequest,
-                                      @RequestHeader("Authorization") String token) {
+    public ResponseEntity<OrderDto> save(@RequestBody AddOrderRequest orderRequest,
+                                         @RequestHeader("Authorization") String token) {
         String auth = token.substring(7);
         try {
-            int idAuthenticated = jwtTokenValidator.getUserIdFromToken(auth);
-            UserEntity infoChef = consumerUser.getRolByIdUser(orderRequest.getChefId(), auth);
+            int idAuthenticated = tokenValidator.getUserIdFromToken(auth);
+            UserDto infoChef = userRequestMapper.user(consumerUser.getRolByIdUser(orderRequest.getChefId(), auth));
+            OrderDto order = orderRequestMapper.toOrderDto(orderServicePort.create(
+                    orderRequestMapper.toOrder(orderRequest), idAuthenticated, infoChef, auth));
 
-            return new ResponseEntity<>(orderServicePort.create(
-                    orderRequestMapper.toOrder(orderRequest),
-                    idAuthenticated,
-                    infoChef,
-                    auth),
-                    HttpStatus.OK);
-
+             return  new ResponseEntity<>(order, HttpStatus.OK);
         } catch (Exception e) {
             throw new ErrorAccess("Error al crear orden" + e);
         }
     }
 
     @GetMapping("/get-all")
-    public ResponseEntity<List<Order>> get(@RequestParam(defaultValue = "pendiente") String state,
+    public ResponseEntity<List<OrderDto>> get(@RequestParam(defaultValue = "pendiente") String state,
                                            @RequestParam(defaultValue = "0") int page,
                                            @RequestParam(defaultValue = "2") int size,
                                            @RequestHeader("Authorization") String token) {
         String auth = token.substring(7);
-        int idAuthenticated = jwtTokenValidator.getUserIdFromToken(auth);
-        return new ResponseEntity<>(orderServicePort.getOrderByState(state, page, size, idAuthenticated), HttpStatus.OK);
+        int idAuthenticated = tokenValidator.getUserIdFromToken(auth);
+
+        return new ResponseEntity<>(orderRequestMapper.toOrderDto(
+                orderServicePort.getOrderByState(state, page, size, idAuthenticated)), HttpStatus.OK);
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Order> takeOrder(@PathVariable int id,
+    public ResponseEntity<OrderDto> takeOrder(@PathVariable int id,
                                            @RequestBody AddOrderRequest orderRequest,
                                            @RequestHeader("Authorization") String token) {
         String auth = token.substring(7);
-        int idAuthenticated = jwtTokenValidator.getUserIdFromToken(auth);
-        return new ResponseEntity<>(orderServicePort.takeOrder(idAuthenticated, id, orderRequest), HttpStatus.OK);
+        int idAuthenticated = tokenValidator.getUserIdFromToken(auth);
+        return new ResponseEntity<>(orderRequestMapper.toOrderDto(
+                orderServicePort.takeOrder(idAuthenticated, id, orderRequest)), HttpStatus.OK);
     }
 
     @PutMapping("/{id}/ready-to-delivery")
@@ -70,7 +70,7 @@ public class OrderRestController {
                                            @RequestBody AddOrderRequest orderRequest,
                                            @RequestHeader("Authorization") String token) {
         String auth = token.substring(7);
-        int idAuthenticated = jwtTokenValidator.getUserIdFromToken(auth);
+        int idAuthenticated = tokenValidator.getUserIdFromToken(auth);
         return new ResponseEntity<>(orderServicePort.readyToDelivery(idAuthenticated, id, orderRequest, auth), HttpStatus.OK);
     }
 
@@ -79,7 +79,7 @@ public class OrderRestController {
                                                 @RequestBody OrderStateModificationDTO orderRequest,
                                                 @RequestHeader("Authorization") String token) {
         String auth = token.substring(7);
-        int idAuthenticated = jwtTokenValidator.getUserIdFromToken(auth);
+        int idAuthenticated = tokenValidator.getUserIdFromToken(auth);
         return new ResponseEntity<>(orderServicePort.deliveryOrder(idAuthenticated, id, orderRequest, auth), HttpStatus.OK);
     }
 
@@ -87,10 +87,7 @@ public class OrderRestController {
     public ResponseEntity<String> cancelOrder (@PathVariable int id,
                                                 @RequestHeader("Authorization") String token) {
         String auth = token.substring(7);
-        int idAuthenticated = jwtTokenValidator.getUserIdFromToken(auth);
+        int idAuthenticated = tokenValidator.getUserIdFromToken(auth);
         return new ResponseEntity<>(orderServicePort.cancelOrder(idAuthenticated, id), HttpStatus.OK);
     }
-
-
-
 }

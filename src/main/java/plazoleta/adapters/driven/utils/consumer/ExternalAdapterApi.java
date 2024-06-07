@@ -1,4 +1,4 @@
-package plazoleta.adapters.driven.jpa.msql.utils.consumer;
+package plazoleta.adapters.driven.utils.consumer;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
@@ -6,29 +6,37 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import plazoleta.adapters.driven.jpa.msql.entity.OrderEntity;
 import plazoleta.adapters.driven.jpa.msql.entity.UserEntity;
-import plazoleta.domain.model.pedido.Order;
+import plazoleta.domain.model.restaurant.User;
+import plazoleta.domain.spi.IExternalPersistenceApi;
 
 import java.time.LocalDate;
 
 @Service
 @RequiredArgsConstructor
-public class ExternalApiConsumption  {
+public class ExternalAdapterApi implements IExternalPersistenceApi {
     private final RestTemplate restTemplate;
 
-    public UserEntity getRolByIdUser (int id, String token) {
+    @Override
+    public User getRolByIdUser (int id, String token) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer "+ token);
 
         return restTemplate.exchange("http://localhost:8080/auth/get/user?id=" + id,
                 HttpMethod.GET,
                 new HttpEntity<>(headers),
-                UserEntity.class).getBody();
+                User.class).getBody();
     }
 
-    public void sendTraceability (UserEntity client, String previousState, String stateNew, UserEntity employeer, LocalDate date, int idOrder) {
-        TraceabilityData data = new TraceabilityData(client, previousState, stateNew, employeer, date, idOrder);
+    @Override
+    public void sendTraceability (User client,
+                                  String previousState,
+                                  String stateNew,
+                                  User employeer,
+                                  LocalDate date,
+                                  int idOrder) {
+
+   /*     TraceabilityData data = new TraceabilityData();
         HttpEntity<TraceabilityData> requestEntity = new HttpEntity<>(data);
 
         restTemplate.exchange("http://localhost:8085/trazabilidad",
@@ -36,5 +44,7 @@ public class ExternalApiConsumption  {
                 requestEntity,
                 Void.class
                 );
+    } */
     }
+
 }

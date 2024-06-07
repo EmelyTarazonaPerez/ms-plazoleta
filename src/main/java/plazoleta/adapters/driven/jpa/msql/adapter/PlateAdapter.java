@@ -18,7 +18,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static plazoleta.adapters.driven.jpa.msql.utils.DataOrdering.getOrdering;
+import static plazoleta.adapters.driven.utils.DataOrdering.getOrdering;
+import static plazoleta.adapters.driven.utils.constants.ConstanstUtils.ERROR_BASE_DATOS;
+import static plazoleta.adapters.driven.utils.constants.ConstanstUtils.PRODUCT_NOT_FOUNT;
 
 @Service
 @AllArgsConstructor
@@ -26,7 +28,6 @@ public class PlateAdapter implements IPlatePersistencePort {
 
     private final IPlateEntityMapper plateEntityMapper;
     private final IPlateRepositoryJPA plateRepositoryJPA;
-    private final IRestaurantRepositoryJPA restaurantRepositoryJPA;
 
     @Override
     public Plate save(Plate plate) {
@@ -36,16 +37,13 @@ public class PlateAdapter implements IPlatePersistencePort {
                     plateEntityMapper.toPlateEntity(plate)
             ));
         } catch (Exception e) {
-            throw new ErrorBaseDatos("No se pudo crear producto verifique informacion");
+            throw new ErrorBaseDatos(ERROR_BASE_DATOS);
         }
 
     }
 
     @Override
-    public Plate update(Plate plate, int id, int idAutenticado) {
-        if (accessModified(plate, idAutenticado)) {
-            throw new ErrorAccessModified("Solo el propietario del restaurante puede modificar");
-        }
+    public Plate update(Plate plate, int id) {
         try {
             PlateEntity plateEntity = plateRepositoryJPA.findById(id).get();
 
@@ -55,28 +53,20 @@ public class PlateAdapter implements IPlatePersistencePort {
 
             return plateEntityMapper.toPlate(plateRepositoryJPA.save(plateEntity));
         } catch (Exception e) {
-            throw new ProductNotFount("Producto no encontrado en la base de datos");
+            throw new ProductNotFount(PRODUCT_NOT_FOUNT);
         }
     }
 
     @Override
     public List<Plate> get(int page, int size, int category, int restaurant) {
-       if (category == 0) { Pageable pageable = getOrdering(page, size,false, "name");
-          return plateEntityMapper.toPlateList(plateRepositoryJPA.findByRestaurantId(restaurant, pageable));
-       }
-       return plateEntityMapper.toPlateList(plateRepositoryJPA
-                       .findByRestaurantId(restaurant)
-                       .stream().filter(plate -> plate.getCategoryId() == category)
-                       .collect(Collectors.toList()));
+        if (category == 0) {
+            Pageable pageable = getOrdering(page, size, false, "name");
+            return plateEntityMapper.toPlateList(plateRepositoryJPA.findByRestaurantId(restaurant, pageable));
+        }
+        return plateEntityMapper.toPlateList(plateRepositoryJPA
+                .findByRestaurantId(restaurant)
+                .stream().filter(plate -> plate.getCategoryId() == category)
+                .collect(Collectors.toList()));
     }
 
-    public boolean accessModified(Plate plate, int idAuthenticated) {
-        Optional<RestaurantEntity> restaurantOptional = restaurantRepositoryJPA.findById(plate.getRestaurantId());
-        if (restaurantOptional.isPresent()) {
-            RestaurantEntity restaurant = restaurantOptional.get();
-            return restaurant.getOwnerId() != idAuthenticated;
-        } else {
-            throw new ErrorBaseDatos("El restaurante " + plate.getRestaurantId() + " no está registrado en la base de datos");
-        }
-    }
 }

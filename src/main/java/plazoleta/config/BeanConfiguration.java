@@ -3,7 +3,9 @@ package plazoleta.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
 import plazoleta.adapters.driven.jpa.msql.adapter.OrderAdapter;
+import plazoleta.adapters.driven.jpa.msql.adapter.OrderPlateAdapter;
 import plazoleta.adapters.driven.jpa.msql.adapter.PlateAdapter;
 import plazoleta.adapters.driven.jpa.msql.adapter.RestaurantAdapter;
 import plazoleta.adapters.driven.jpa.msql.mapper.IOrderEntityMapper;
@@ -13,16 +15,18 @@ import plazoleta.adapters.driven.jpa.msql.repository.IOrderPlateRepositoryJPA;
 import plazoleta.adapters.driven.jpa.msql.repository.IOrderRepositoryJPA;
 import plazoleta.adapters.driven.jpa.msql.repository.IPlateRepositoryJPA;
 import plazoleta.adapters.driven.jpa.msql.repository.IRestaurantRepositoryJPA;
-import plazoleta.adapters.driven.jpa.msql.utils.consumer.ExternalApiConsumption;
+import plazoleta.adapters.driven.utils.consumer.ExternalAdapterApi;
+import plazoleta.adapters.driven.security.SecurityAdapter;
+import plazoleta.adapters.driven.utils.twilio.MessageAdapterImpl;
+import plazoleta.domain.api.IExternalApiServicePort;
 import plazoleta.domain.api.IOrderServicePort;
 import plazoleta.domain.api.IPlateServicePort;
 import plazoleta.domain.api.IRestaurantServicePort;
+import plazoleta.domain.api.useCase.ExternalCaseUse;
 import plazoleta.domain.api.useCase.OrderCaseUse;
 import plazoleta.domain.api.useCase.PlateCaseUse;
 import plazoleta.domain.api.useCase.RestaurantCase;
-import plazoleta.domain.spi.IOrderPersistencePort;
-import plazoleta.domain.spi.IPlatePersistencePort;
-import plazoleta.domain.spi.IRestaurantPersistencePort;
+import plazoleta.domain.spi.*;
 
 
 @Configuration
@@ -37,8 +41,9 @@ public class BeanConfiguration {
     private final IOrderRepositoryJPA orderRepositoryJPA;
     private final IOrderEntityMapper orderEntityMapper;
 
-    private final ExternalApiConsumption externalApiConsumption;
     private final IOrderPlateRepositoryJPA orderPlateRepositoryJPA;
+
+    private final RestTemplate restTemplate;
 
 
     @Bean
@@ -51,23 +56,44 @@ public class BeanConfiguration {
 
     @Bean
     public IPlatePersistencePort platePersistencePort(){
-        return new PlateAdapter(plateEntityMapper, plateRepositoryJPA, restaurantRepositoryJPA );
+        return new PlateAdapter(plateEntityMapper, plateRepositoryJPA);
     }
     @Bean
-    public IPlateServicePort plateServicePort(){ return new PlateCaseUse(platePersistencePort());
+    public IPlateServicePort plateServicePort(){ return new PlateCaseUse(platePersistencePort(), restaurantPersistencePort());
     }
     @Bean
     public IOrderPersistencePort persistencePort () {
         return new OrderAdapter(
-                orderRepositoryJPA,
-                orderEntityMapper,
+                orderRepositoryJPA, orderEntityMapper);
+    }
+    @Bean
+    public IExternalPersistenceApi externalPersistenceApi() {
+        return new ExternalAdapterApi(restTemplate);
+    }
 
-                externalApiConsumption,
-                orderPlateRepositoryJPA,
-                restaurantRepositoryJPA);
+    @Bean
+    public ISecurityPersistencePort securityPersistencePort() {
+        return new SecurityAdapter();
+    }
+
+    @Bean
+    public IMessagePersistencePort twilioPersistencePort() { return new MessageAdapterImpl(); }
+
+    @Bean
+    public IOrderPlatePersistencePort orderPlatePersistencePort() { return new OrderPlateAdapter(orderPlateRepositoryJPA,orderEntityMapper ); }
+    @Bean
+    public IExternalApiServicePort externalApiServicePort () {
+        return new ExternalCaseUse(externalPersistenceApi());
     }
     @Bean
     public IOrderServicePort orderServicePort () {
-        return new OrderCaseUse(persistencePort());
+        return new OrderCaseUse(
+                persistencePort(),
+                externalPersistenceApi(),
+                securityPersistencePort(),
+                twilioPersistencePort(),
+                restaurantPersistencePort(),
+                orderPlatePersistencePort()
+                );
     }
 }

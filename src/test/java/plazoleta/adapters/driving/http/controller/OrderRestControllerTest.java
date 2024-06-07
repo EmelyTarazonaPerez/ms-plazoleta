@@ -14,9 +14,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import plazoleta.adapters.driven.jpa.msql.entity.UserEntity;
-import plazoleta.adapters.driven.jpa.msql.utils.consumer.ExternalApiConsumption;
+import plazoleta.adapters.driven.utils.consumer.ExternalAdapterApi;
 import plazoleta.adapters.driving.http.dto.request.order.OrderStateModificationDTO;
-import plazoleta.adapters.driving.http.utils.JwtService.JwtTokenValidator;
+import plazoleta.adapters.driven.security.TokenAdapter;
 import plazoleta.adapters.driving.http.dto.request.order.AddOrderRequest;
 import plazoleta.adapters.driving.http.mapper.IOrderRequestMapper;
 import plazoleta.domain.api.IOrderServicePort;
@@ -39,9 +39,9 @@ class OrderRestControllerTest {
     @Mock
     private IOrderRequestMapper orderRequestMapper;
     @Mock
-    private ExternalApiConsumption consumerUser;
+    private ExternalAdapterApi consumerUser;
     @Mock
-    private JwtTokenValidator jwtTokenValidator;
+    private TokenAdapter jwtValidatorAdapter;
     @InjectMocks
     private OrderRestController orderRestController;
 
@@ -68,7 +68,7 @@ class OrderRestControllerTest {
         Order order = new Order( 1, 123, LocalDate.now(), "pendiente", 26, 6, null);
 
         // Configurar el comportamiento simulado
-        when(jwtTokenValidator.getUserIdFromToken(auth)).thenReturn(idAuthenticated);
+        when(jwtValidatorAdapter.getUserIdFromToken(auth)).thenReturn(idAuthenticated);
         when(consumerUser.getRolByIdUser(24, auth)).thenReturn(infoChef);
         when(orderRequestMapper.toOrder(orderRequest)).thenReturn(order);
 
@@ -83,7 +83,7 @@ class OrderRestControllerTest {
     void get() throws Exception {
         List<Order> orders = new ArrayList<>();
 
-        when(jwtTokenValidator.getUserIdFromToken("TOKEN_DE_PRUEBA")).thenReturn(26);
+        when(jwtValidatorAdapter.getUserIdFromToken("TOKEN_DE_PRUEBA")).thenReturn(26);
         when(orderServicePort.getOrderByState("pendiente",0,5, 26)).thenReturn(orders);
 
         mockMcv.perform(MockMvcRequestBuilders.get("/order/get-all")
@@ -102,14 +102,14 @@ class OrderRestControllerTest {
         String expected = "El estado de producto ya fue cambiado a entregado";
         OrderStateModificationDTO orderRequest = new OrderStateModificationDTO();
 
-        when(jwtTokenValidator.getUserIdFromToken("mockToken")).thenReturn(1);
+        when(jwtValidatorAdapter.getUserIdFromToken("mockToken")).thenReturn(1);
         when(orderServicePort.deliveryOrder(1, id, orderRequest, "mockToken")).thenReturn(expected);
 
         // Act
         ResponseEntity<String> response = orderRestController.deliverOrder(id, orderRequest, token);
 
         // Assert
-        verify(jwtTokenValidator).getUserIdFromToken("mockToken");
+        verify(jwtValidatorAdapter).getUserIdFromToken("mockToken");
         verify(orderServicePort).deliveryOrder(1, id, orderRequest, "mockToken");
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(expected, response.getBody());
@@ -121,14 +121,14 @@ class OrderRestControllerTest {
         int id = 1;
         String token = "Bearer mockToken";
 
-        when(jwtTokenValidator.getUserIdFromToken("mockToken")).thenReturn(1);
+        when(jwtValidatorAdapter.getUserIdFromToken("mockToken")).thenReturn(1);
         when(orderServicePort.cancelOrder(1, id)).thenReturn("Su orden fue cancelada correctamente");
 
         // Act
         ResponseEntity<String> response = orderRestController.cancelOrder(id, token);
 
         // Assert
-        verify(jwtTokenValidator).getUserIdFromToken("mockToken");
+        verify(jwtValidatorAdapter).getUserIdFromToken("mockToken");
         verify(orderServicePort).cancelOrder(1, id);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals("Su orden fue cancelada correctamente", response.getBody());
